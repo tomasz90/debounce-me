@@ -1,0 +1,20 @@
+{
+  "name": "DebounceMe",
+  "version": "1.0.0",
+  "description": "This library solves bounce problem, imperfection of physical buttons. It supports short clicks and long clicks.",
+  "keywords": "button, buttons, switch, switches, click, clicks, debounce, debouncer, input, IO",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomasz90/debounce-me"
+  },
+  "authors": [
+    {
+      "name": "Tomasz Kulig",
+      "email": "tomaszkacperkulig@gmail.com",
+      "url": "https://github.com/tomasz90"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*"
+}

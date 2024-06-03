@@ -1,0 +1,5 @@
+Button	KEYWORD1
+ButtonsHandler  KEYWORD1
+setDebounceTime KEYWORD2
+setLongPressTime    KEYWORD2
+poll    KEYWORD2
