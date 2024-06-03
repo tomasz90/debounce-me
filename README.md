@@ -19,10 +19,10 @@ Button button(27, IN_PULLUP, pressed, pressedLong);
 ButtonsHandler buttonsHandler({button}); // can put multiple buttons here {button1, button2...}
 
 void setup() {
-Serial.begin(115200);
+    Serial.begin(115200);
 }
 
 void loop() {
-buttonsHandler.poll();
+    buttonsHandler.poll();
 }
 ```
