@@ -30,7 +30,7 @@ struct Button {
     Button(byte buttonPin,
            Mode buttonMode,
            std::function<void()> buttonOnPress,
-           std::function<void()> buttonOnPressLong);
+           std::function<void()> buttonOnPressLong = nullptr);
 
     bool operator<(const Button &other) const;
     bool operator==(const Button& other) const;

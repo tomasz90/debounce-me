@@ -7,15 +7,16 @@ There are already few libraries in PlatformIO, but none of them were perfect, or
 Below is simple example how to use it:
 
 ```c++
-
 #include <Arduino.h>
 #include "ButtonsHandler.h"
+
+#define BUTTON_PIN 27
 
 void pressed() { Serial.println("Button pressed"); }
 
 void pressedLong() { Serial.println("Button pressed long"); }
 
-Button button(27, IN_PULLUP, pressed, pressedLong);
+Button button(BUTTON_PIN, IN_PULLUP, pressed, pressedLong);
 ButtonsHandler buttonsHandler({button}); // can put multiple buttons here {button1, button2...}
 
 void setup() {

@@ -3,7 +3,7 @@
 Button::Button(byte buttonPin,
                Mode buttonMode,
                std::function<void()> buttonOnPress,
-               std::function<void()> buttonOnPressLong = nullptr) :
+               std::function<void()> buttonOnPressLong) :
         pin(buttonPin),
         mode(buttonMode),
         onPress(std::move(buttonOnPress)),
