@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <Arduino.h>
+#include <functional>
 
 #define RELEASED 0
 #define PRESSED 1

@@ -1,4 +1,5 @@
 #include "ButtonsHandler.h"
+#include <algorithm>
 
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button> buttons) : buttons(buttons) {
     std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button &button) {
