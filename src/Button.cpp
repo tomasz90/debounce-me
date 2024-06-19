@@ -6,7 +6,6 @@ Button::Button(byte buttonPin,
         mode(buttonMode) {
 
     pinMode(pin, mode);
-
     invertedState = mode == IN_PULLUP;
 
     state.lastRawState = RELEASED;
