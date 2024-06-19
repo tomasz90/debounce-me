@@ -64,19 +64,18 @@ void ButtonsHandler::poll() {
 
     std::for_each(buttons.begin(), buttons.end(), [this](Button &button) {
         bool isLongPress = isLongPressed(button);
-        bool& wasLongPress = wasLongPressed(button);
+        bool &wasLongPress = wasLongPressed(button);
 
-        if (wasLongPress) {
-            if (wasPressed(button)) wasLongPress = false;
-        } else if (wasReleased(button)) {
-            buttonLastStartPressed[button] = millis();
-        } else if (wasPressed(button) && (!isLongPress || !button.isLongPressSupported)) {
+        if (isPressed(button) && isLongPress && button.isLongPressSupported) {
+            buttonLastStartPressed[button] = button.isMultipleLongPressSupported ? millis() : 0;
+            wasLongPress = true;
+            button.onPressLong();
+        } else if (wasPressed(button) && !wasLongPress && (!isLongPress || !button.isLongPressSupported)) {
             buttonLastStartPressed[button] = 0;
             button.onPress();
-        } else if (isPressed(button) && isLongPress && button.isLongPressSupported) {
-            buttonLastStartPressed[button] = 0;
-            button.onPressLong();
-            wasLongPress = true;
+        } else if (wasReleased(button)) {
+            buttonLastStartPressed[button] = millis();
+            wasLongPress = false;
         }
     });
 

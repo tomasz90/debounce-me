@@ -3,11 +3,13 @@
 Button::Button(byte buttonPin,
                Mode buttonMode,
                std::function<void()> buttonOnPress,
-               std::function<void()> buttonOnPressLong) :
+               std::function<void()> buttonOnPressLong,
+               bool isMultipleLongPressSupported) :
         pin(buttonPin),
         mode(buttonMode),
         onPress(std::move(buttonOnPress)),
-        onPressLong(std::move(buttonOnPressLong)) {
+        onPressLong(std::move(buttonOnPressLong)),
+        isMultipleLongPressSupported(isMultipleLongPressSupported) {
 
     pinMode(pin, mode);
 
