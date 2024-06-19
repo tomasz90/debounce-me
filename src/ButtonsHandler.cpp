@@ -15,20 +15,17 @@ void ButtonsHandler::setLongPressTime(unsigned int time) {
     longPressTime = time;
 }
 
-bool ButtonsHandler::pollState(Button *button) const {
+void ButtonsHandler::pollState(Button *button) const {
     auto &s = button->state;
-    bool stateChanged = false;
     bool currentRawState = button->invertedState == !digitalRead(button->pin);
     if (s.lastRawState != currentRawState) {
         bool moreThanDebounceTime = (unsigned long) (millis() - s.lastChangeTime) >= debounceTime;
         if (moreThanDebounceTime) {
             s.currentState = currentRawState;
             s.lastChangeTime = millis();
-            stateChanged = true;
         }
     }
     s.lastRawState = currentRawState;
-    return stateChanged;
 }
 
 void ButtonsHandler::resetState(Button *button) const {
@@ -62,14 +59,14 @@ void ButtonsHandler::poll() {
     });
 
     std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
-        bool isLongPress = isLongPressed(button);
+        bool isLongPress = isLongPressed(button) && button->isLongPressSupported;
         bool &wasLongPress = wasLongPressed(button);
 
-        if (isPressed(button) && isLongPress && button->isLongPressSupported) {
+        if (isPressed(button) && isLongPress) {
             buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
             wasLongPress = true;
             button->onPressLong();
-        } else if (wasPressed(button) && !wasLongPress && (!isLongPress || !button->isLongPressSupported)) {
+        } else if (wasPressed(button) && !wasLongPress && !isLongPress) {
             buttonLastStartPressed[button] = 0;
             button->onPress();
         } else if (wasReleased(button)) {

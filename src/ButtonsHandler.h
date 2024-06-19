@@ -23,7 +23,7 @@ private:
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, bool> buttonWasLongPressed;
 
-    bool pollState(Button *button) const;
+    void pollState(Button *button) const;
     void resetState(Button *button) const;
     bool isPressed(Button *button) const;
     bool wasPressed(Button *button) const;
