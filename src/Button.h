@@ -29,11 +29,11 @@ struct Button {
         unsigned long lastChangeTime;
     } state;
 
-    Button(byte buttonPin,
-           Mode buttonMode,
-           std::function<void()> buttonOnPress,
-           std::function<void()> buttonOnPressLong = nullptr
-           bool isMultipleLongPressSupported = false);
+    Button(byte buttonPin, Mode buttonMode);
+
+    void setBehavior(std::function<void()> buttonOnPress,
+                     std::function<void()> buttonOnPressLong = nullptr,
+                     bool isMultipleLongPressSupported = false);
 
     bool operator<(const Button &other) const;
     bool operator==(const Button& other) const;
