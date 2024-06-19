@@ -20,7 +20,7 @@ void Button::setBehavior(std::function<void()> onPress,
                          bool isMultipleLongPressSupported) {
     this->onPress = std::move(onPress);
     this->onPressLong = std::move(onPressLong);
-    this->isLongPressSupported = onPressLong != nullptr;
+    this->isLongPressSupported = this->onPressLong != nullptr;
     this->isMultipleLongPressSupported = isMultipleLongPressSupported;
 }
 
