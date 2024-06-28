@@ -11,10 +11,6 @@ void ButtonsHandler::setDebounceTime(unsigned int time) {
     debounceTime = time;
 }
 
-void ButtonsHandler::setLongPressTime(unsigned int time) {
-    longPressTime = time;
-}
-
 void ButtonsHandler::pollState(Button *button) const {
     auto &s = button->state;
     bool currentRawState = button->invertedState == !digitalRead(button->pin);
@@ -46,7 +42,7 @@ bool ButtonsHandler::wasReleased(Button *button) const {
 
 bool ButtonsHandler::isLongPressed(Button *button) const {
     auto lastStartPressed = buttonLastStartPressed.at(button);
-    return millis() - lastStartPressed >= longPressTime && lastStartPressed != 0;
+    return millis() - lastStartPressed >= button->longPressTime && lastStartPressed != 0;
 }
 
 bool &ButtonsHandler::wasLongPressed(Button *button) {

@@ -18,6 +18,7 @@ struct Button {
     bool invertedState;
     bool isLongPressSupported;
     bool isMultipleLongPressSupported;
+    unsigned int longPressTime;
 
     std::function<void()> onPress;
     std::function<void()> onPressLong;
@@ -33,8 +34,10 @@ struct Button {
 
     void setBehavior(std::function<void()> buttonOnPress,
                      std::function<void()> buttonOnPressLong = nullptr,
+                     unsigned int longPressTime = 1000,
                      bool isMultipleLongPressSupported = false);
 
+    void setLongPressTime(unsigned int time);
     bool operator<(const Button &other) const;
     bool operator==(const Button& other) const;
 };
