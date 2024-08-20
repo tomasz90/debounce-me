@@ -58,16 +58,36 @@ void ButtonsHandler::poll() {
         bool isLongPress = isLongPressed(button) && button->isLongPressSupported;
         bool &wasLongPress = wasLongPressed(button);
 
-        if (isPressed(button) && isLongPress) {
+        if (isPressed(button) && isLongPress && !wasBothPress) {
+            if(simultaneousButtons.size() < 2) {
+                button->onPressLong();
+                wasLongPress = true;
+            } else {
+                wasBothPress = true;
+                auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
+                if(behavior) {
+                    behavior();
+                }
+            }
             buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
-            wasLongPress = true;
-            button->onPressLong();
-        } else if (wasPressed(button) && !wasLongPress && !isLongPress) {
+            simultaneousButtons.clear();
+        } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasBothPress) {
+            if(simultaneousButtons.size() < 2) {
+                button->onPress();
+            } else {
+                wasBothPress = true;
+                auto behavior = simultaneousBehaviors[simultaneousButtons];
+                if(behavior) {
+                    behavior();
+                }
+            }
             buttonLastStartPressed[button] = 0;
-            button->onPress();
+            simultaneousButtons.clear();
         } else if (wasReleased(button)) {
             buttonLastStartPressed[button] = millis();
+            simultaneousButtons.insert(button);
             wasLongPress = false;
+            wasBothPress = false;
         }
     });
 
