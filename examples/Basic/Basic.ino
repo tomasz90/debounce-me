@@ -18,7 +18,7 @@ ButtonsHandler buttonsHandler({buttonA, buttonB});
 
 void setup() {
     Serial.begin(115200);
-    button->setBehavior(pressed, pressedLong);
+    buttonA->setBehavior(pressed, pressedLong);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, combintation);
 }
 

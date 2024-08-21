@@ -1,6 +1,6 @@
 #include <unity.h>
-#include "Button.h"
-#include "ButtonsHandler.h"
+#include "../src/Button.h"
+#include "../src/ButtonsHandler.h"
 
 #define BUTTON_PIN_A 2
 #define BUTTON_PIN_B 21
@@ -113,6 +113,90 @@ void testOnPressLong(void) {
     assertEqual0Except(LONG_PRESS_A);
 }
 
+void testOnPressLongMultiple(void) {
+    pushButton(buttonA);
+    delay(3*LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(3, mapOfActions[LONG_PRESS_A]);
+    assertEqual0Except(LONG_PRESS_A);
+}
+
+void testOnPressSimultaneous(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B);
+}
+
+void testOnPressSimultaneous2(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    pushButton(buttonC);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    releaseButton(buttonC);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B_C]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B_C);
+}
+
+void testOnPressSimultaneous3(void) {
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    pushButton(buttonB);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonB);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B);
+}
+
+void testOnPressSimultaneousLong(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    delay(LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B]);
+    assertEqual0Except(SIMULTANEOUS_LONG_PRESS_A_B);
+}
+
+void testOnPressSimultaneousLong2(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    pushButton(buttonC);
+    delay(LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    releaseButton(buttonC);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C]);
+    assertEqual0Except(SIMULTANEOUS_LONG_PRESS_A_B_C);
+}
+
 void setup() {
     Serial.begin(115200);
 
@@ -141,6 +225,12 @@ void setup() {
 
     RUN_TEST(testOnPress);
     RUN_TEST(testOnPressLong);
+    RUN_TEST(testOnPressLongMultiple);
+    RUN_TEST(testOnPressSimultaneous);
+    RUN_TEST(testOnPressSimultaneous2);
+    RUN_TEST(testOnPressSimultaneous3);
+    RUN_TEST(testOnPressSimultaneousLong);
+    RUN_TEST(testOnPressSimultaneousLong2);
 
     UNITY_END();
 
