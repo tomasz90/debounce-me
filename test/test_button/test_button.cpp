@@ -6,8 +6,9 @@
 #define BUTTON_PIN_B 21
 #define BUTTON_PIN_C 22
 
-#define LONG_PRESS_TIME 1100
+#define LONG_PRESS_TIME 300
 #define SMALL_DELAY 100
+#define LONG_PRESS_DELAY 350
 
 enum Actions {
     PRESS_A,
@@ -47,7 +48,15 @@ Button* buttonA = new Button(BUTTON_PIN_A, IN_PULLUP);
 Button* buttonB = new Button(BUTTON_PIN_B, IN_PULLUP);
 Button* buttonC = new Button(BUTTON_PIN_C, IN_PULLUP);
 
-ButtonsHandler buttonsHandler({buttonA});
+ButtonsHandler buttonsHandler({buttonA, buttonB, buttonC});
+
+void pushButton(Button *button) {
+    digitalWrite(button->pin, LOW);
+}
+
+void releaseButton(Button *button) {
+    digitalWrite(button->pin, HIGH);
+}
 
 void setUp(void) {
     mapOfActions[PRESS_A] = 0;
@@ -64,14 +73,10 @@ void setUp(void) {
     mapOfActions[SIMULTANEOUS_LONG_PRESS_B_C] = 0;
     mapOfActions[SIMULTANEOUS_PRESS_A_B_C] = 0;
     mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C] = 0;
-}
 
-void pushButton(Button *button) {
-    digitalWrite(button->pin, LOW);
-}
-
-void releaseButton(Button *button) {
-    digitalWrite(button->pin, HIGH);
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    releaseButton(buttonC);
 }
 
 void tearDown(void) {
@@ -97,6 +102,17 @@ void testOnPress(void) {
     assertEqual0Except(PRESS_A);
 }
 
+void testOnPressLong(void) {
+    pushButton(buttonA);
+    delay(LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[LONG_PRESS_A]);
+    assertEqual0Except(LONG_PRESS_A);
+}
+
 void setup() {
     Serial.begin(115200);
 
@@ -104,9 +120,9 @@ void setup() {
     pinMode(BUTTON_PIN_B, OUTPUT);
     pinMode(BUTTON_PIN_C, OUTPUT);
 
-    buttonA->setBehavior(pressA, longPressA);
-    buttonB->setBehavior(pressB, longPressB);
-    buttonC->setBehavior(pressC, longPressC);
+    buttonA->setBehavior(pressA, longPressA, LONG_PRESS_TIME, true);
+    buttonB->setBehavior(pressB, longPressB, LONG_PRESS_TIME, true);
+    buttonC->setBehavior(pressC, longPressC, LONG_PRESS_TIME, true);
 
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, simultaneousPressAB);
     buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB);
@@ -122,7 +138,10 @@ void setup() {
     xTimerStart(xTimer, 0);
 
     UNITY_BEGIN();
+
     RUN_TEST(testOnPress);
+    RUN_TEST(testOnPressLong);
+
     UNITY_END();
 
     xTimerStop(xTimer, 0);
