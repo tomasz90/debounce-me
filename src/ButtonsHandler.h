@@ -25,7 +25,7 @@ private:
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
 
-    bool wasBothPress = false;
+    bool wasSimultaneousPress = false;
     unsigned int debounceTime = 20;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;

@@ -58,19 +58,19 @@ bool &ButtonsHandler::wasLongPressed(Button *button) {
 }
 
 bool ButtonsHandler::isOneButtonPressed() const {
-    return simultaneousButtons.size() < 2;
+    return simultaneousButtons.size() < 2;  // this is required to be able to run multiple OnPressLong
 }
 
 void ButtonsHandler::simultaneousOnPress() {
     auto behavior = simultaneousBehaviors[simultaneousButtons];
     if (behavior) behavior();
-    wasBothPress = true;
+    wasSimultaneousPress = true;
 }
 
 void ButtonsHandler::simultaneousOnPressLong() {
     auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
     if (behavior) behavior();
-    wasBothPress = true;
+    wasSimultaneousPress = true;
 }
 
 void ButtonsHandler::poll() {
@@ -83,7 +83,7 @@ void ButtonsHandler::poll() {
         bool &wasLongPress = wasLongPressed(button);
 
         // LONG PRESS CALLBACKS
-        if (isPressed(button) && isLongPress && !wasBothPress) {
+        if (isPressed(button) && isLongPress && !wasSimultaneousPress) {
             if (isOneButtonPressed()) {
                 button->onPressLong();
                 wasLongPress = true;
@@ -94,7 +94,7 @@ void ButtonsHandler::poll() {
             simultaneousButtons.clear();
 
         // PRESS CALLBACKS
-        } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasBothPress) {
+        } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
             if (isOneButtonPressed()) {
                 button->onPress();
             } else {
@@ -108,7 +108,7 @@ void ButtonsHandler::poll() {
             buttonLastStartPressed[button] = millis();
             simultaneousButtons.insert(button);
             wasLongPress = false;
-            wasBothPress = false;
+            wasSimultaneousPress = false;
         }
     });
 
