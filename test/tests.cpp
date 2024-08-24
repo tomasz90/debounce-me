@@ -7,11 +7,11 @@
 #define BUTTON_PIN_B 21
 #define BUTTON_PIN_C 22
 
-#define LONG_PRESS_TIME 300
-#define SIMULTANEOUS_PRESS_TIME 600
-#define SMALL_DELAY 100
-#define LONG_PRESS_DELAY 350
-#define SIMULTANEOUS_PRESS_DELAY 650
+#define SMALL_DELAY 20
+#define LONG_PRESS_TIME 100
+#define LONG_PRESS_DELAY (LONG_PRESS_TIME * 1.1)
+#define SIMULTANEOUS_PRESS_TIME 200
+#define SIMULTANEOUS_LONG_PRESS_DELAY (SIMULTANEOUS_PRESS_TIME * 1.1)
 
 Button *buttonA = new Button(BUTTON_PIN_A, IN_PULLUP);
 Button *buttonB = new Button(BUTTON_PIN_B, IN_PULLUP);
@@ -19,6 +19,7 @@ Button *buttonC = new Button(BUTTON_PIN_C, IN_PULLUP);
 
 ButtonsHandler buttonsHandler({buttonA, buttonB, buttonC});
 
+// TO RUN TESTS: `pio test -vvv`
 void setUp(void) {
     resetActions();
 
@@ -106,7 +107,7 @@ void testOnPressSimultaneous3(void) {
 void testOnPressSimultaneousLong(void) {
     pushButton(buttonA);
     pushButton(buttonB);
-    delay(SIMULTANEOUS_PRESS_DELAY);
+    delay(SIMULTANEOUS_LONG_PRESS_DELAY);
 
     releaseButton(buttonA);
     releaseButton(buttonB);
@@ -119,7 +120,7 @@ void testOnPressSimultaneousLong2(void) {
     pushButton(buttonA);
     pushButton(buttonB);
     pushButton(buttonC);
-    delay(SIMULTANEOUS_PRESS_DELAY);
+    delay(SIMULTANEOUS_LONG_PRESS_DELAY);
 
     releaseButton(buttonA);
     releaseButton(buttonB);
@@ -197,7 +198,7 @@ void testCombinations(void) {
     delay(SMALL_DELAY);
     pushButton(buttonB);
 
-    delay(3 * SIMULTANEOUS_PRESS_DELAY); // should not influence
+    delay(3 * SIMULTANEOUS_LONG_PRESS_DELAY); // should not influence
 
     releaseButton(buttonA);
     delay(SMALL_DELAY);
@@ -206,6 +207,16 @@ void testCombinations(void) {
     delay(SMALL_DELAY);
 
     assertAllEqual0Except(SIMULTANEOUS_LONG_PRESS_A_B);
+    resetActions();
+
+    // TEST BUTTON C PRESS
+    pushButton(buttonC);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonC);
+    delay(SMALL_DELAY);
+
+    assertAllEqual0Except(PRESS_C);
     resetActions();
 
     // TEST BUTTON C LONG PRESS
@@ -224,7 +235,7 @@ void testCombinations(void) {
     pushButton(buttonB);
     pushButton(buttonC);
 
-    delay(SIMULTANEOUS_PRESS_DELAY);
+    delay(SIMULTANEOUS_LONG_PRESS_DELAY);
 
     releaseButton(buttonA);
     delay(SMALL_DELAY);

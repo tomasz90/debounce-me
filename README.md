@@ -4,8 +4,8 @@ This debounce button library is designed to handle the common issue of switch bo
 
 There are already few libraries in PlatformIO, but none of them were perfect, or even work properly. I think this library is outstanding for its simplicity and efficiency.
 
-Below is simple example how to use it. Notice that for only two hypothetical buttons, you can define as much as 6 behaviors (pressedA, pressedB, pressedLongA, pressedLongB, combinationAB, combinationLongAB), and for 3 buttons you can define 14 behaviors!!!
-Use `pollOnce()` - to call only once in startup, or `poll()` - to call constantly inside a loop.
+Below is simple example how to use it. Notice that for only two hypothetical buttons, you can define as much as 6 behaviors (pressedA, pressedB, pressedLongA, pressedLongB, combinationAB, combinationLongAB) and for 3 buttons you can define up to 14 behaviors!!!
+Use `pollOnce()` - to call only once in setup, or `poll()` - to call constantly inside a loop.
 
 ```c++
 #include <Arduino.h>
@@ -30,13 +30,10 @@ void setup() {
     Serial.begin(115200);
     buttonA->setBehavior(pressed, pressedLong);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, combintation);
-    
-    // here pollOnce (need to use FreeRTOS) OR inside loop call buttonsHandler.poll()
-    // both ways should work similarly
-    buttonsHandler.pollOnce(); 
+    buttonsHandler.pollOnce(); // poll here once (need to use FreeRTOS)
 }
 
 void loop() {
-    buttonsHandler.poll(); // alternative to pollOnce
+    // alternatively: buttonsHandler.poll();
 }
 ```

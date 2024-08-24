@@ -29,7 +29,6 @@ private:
 
     bool wasSimultaneousPress = false;
     unsigned int debounceTime = 20;
-    unsigned int simultaneousLongPressTime;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, bool> buttonWasLongPressed;

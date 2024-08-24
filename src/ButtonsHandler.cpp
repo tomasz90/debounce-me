@@ -58,8 +58,8 @@ bool ButtonsHandler::isLongPressed(Button *button) const {
 }
 
 bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
-    auto lastStartPressed = buttonLastStartPressed.at(button);
     if (!simultaneousLongPressTimes[simultaneousButtons]) return false;
+    auto lastStartPressed = buttonLastStartPressed.at(button);
     auto matchTime = millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtons];
     return matchTime && !isOneButtonPressed();
 }
@@ -72,8 +72,7 @@ bool ButtonsHandler::isOneButtonPressed() const {
     return simultaneousButtons.size() < 2;  // this is required to be able to run multiple OnPressLong
 }
 
-// this function can be used to poll inside `startup()`, `loop()` is not required.
-// use either this or `poll()`
+// this function can be used to poll inside `setup()`
 #if defined(ESP32) || \
     defined(NRF52840_XXAA) || \
     defined(RASPBERRY_PI_PICO) || \
