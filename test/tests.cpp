@@ -7,8 +7,10 @@
 #define BUTTON_PIN_C 22
 
 #define LONG_PRESS_TIME 300
+#define SIMULTANEOUS_PRESS_TIME 600
 #define SMALL_DELAY 100
 #define LONG_PRESS_DELAY 350
+#define SIMULTANEOUS_PRESS_DELAY 650
 
 enum Actions {
     PRESS_A,
@@ -176,7 +178,7 @@ void testOnPressSimultaneous3(void) {
 void testOnPressSimultaneousLong(void) {
     pushButton(buttonA);
     pushButton(buttonB);
-    delay(LONG_PRESS_DELAY);
+    delay(SIMULTANEOUS_PRESS_DELAY);
 
     releaseButton(buttonA);
     releaseButton(buttonB);
@@ -190,7 +192,7 @@ void testOnPressSimultaneousLong2(void) {
     pushButton(buttonA);
     pushButton(buttonB);
     pushButton(buttonC);
-    delay(LONG_PRESS_DELAY);
+    delay(SIMULTANEOUS_PRESS_DELAY);
 
     releaseButton(buttonA);
     releaseButton(buttonB);
@@ -199,6 +201,45 @@ void testOnPressSimultaneousLong2(void) {
 
     TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C]);
     assertEqual0Except(SIMULTANEOUS_LONG_PRESS_A_B_C);
+}
+
+void testNotOnPressSimultaneousLong(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    delay(LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B);
+}
+
+void testNotOnPressSimultaneousLong2(void) {
+    pushButton(buttonA);
+    pushButton(buttonB);
+    pushButton(buttonC);
+    delay(LONG_PRESS_DELAY);
+
+    releaseButton(buttonA);
+    releaseButton(buttonB);
+    releaseButton(buttonC);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B_C]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B_C);
+}
+
+void testCombinations(void) {
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    TEST_ASSERT_EQUAL(1, mapOfActions[SIMULTANEOUS_PRESS_A_B_C]);
+    assertEqual0Except(SIMULTANEOUS_PRESS_A_B_C);
 }
 
 void setup() {
@@ -213,13 +254,13 @@ void setup() {
     buttonC->setBehavior(pressC, longPressC, LONG_PRESS_TIME, true);
 
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, simultaneousPressAB);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB, LONG_PRESS_TIME);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC, LONG_PRESS_TIME);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonB, buttonC}, simultaneousPressBC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC, LONG_PRESS_TIME);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB, buttonC}, simultaneousPressABC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC, LONG_PRESS_TIME);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 
     buttonsHandler.pollOnce();
 
@@ -233,6 +274,8 @@ void setup() {
     RUN_TEST(testOnPressSimultaneous3);
     RUN_TEST(testOnPressSimultaneousLong);
     RUN_TEST(testOnPressSimultaneousLong2);
+    RUN_TEST(testNotOnPressSimultaneousLong);
+    RUN_TEST(testNotOnPressSimultaneousLong2);
 
     UNITY_END();
 
