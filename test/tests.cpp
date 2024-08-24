@@ -177,20 +177,20 @@ void testCombinations(void) {
     assertAllEqual0Except(PRESS_B);
     resetActions();
 
-    // TEST BUTTONS A_B SIMULTANEOUS PRESS
+    // TEST BUTTONS A_C SIMULTANEOUS PRESS WHEN A_C IS NOT DEFINED
     pushButton(buttonA);
     delay(SMALL_DELAY);
-    pushButton(buttonB);
+    pushButton(buttonC);
 
     delay(LONG_PRESS_DELAY);
 
     releaseButton(buttonA);
     delay(SMALL_DELAY);
 
-    releaseButton(buttonB);
+    releaseButton(buttonC);
     delay(SMALL_DELAY);
 
-    assertAllEqual0Except(SIMULTANEOUS_PRESS_A_B);
+    assertAllEqual0Except(SIMULTANEOUS_PRESS_A_C, 0);
     resetActions();
 
     // TEST BUTTONS A_B SIMULTANEOUS LONG PRESS
@@ -261,7 +261,8 @@ void setup() {
 
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, simultaneousPressAB);
     buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
+    // Lets assume this combination is missing:
+    // buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
     buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonB, buttonC}, simultaneousPressBC);
     buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);

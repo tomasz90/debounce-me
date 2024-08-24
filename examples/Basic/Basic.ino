@@ -19,7 +19,7 @@ ButtonsHandler buttonsHandler({buttonA, buttonB});
 void setup() {
     Serial.begin(115200);
     buttonA->setBehavior(pressed, pressedLong);
-    buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, combintation);
+    buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, combination);
     buttonsHandler.pollOnce(); // poll here once (need to use FreeRTOS)
 }
 
