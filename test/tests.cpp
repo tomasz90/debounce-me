@@ -50,15 +50,7 @@ Button* buttonC = new Button(BUTTON_PIN_C, IN_PULLUP);
 
 ButtonsHandler buttonsHandler({buttonA, buttonB, buttonC});
 
-void pushButton(Button *button) {
-    digitalWrite(button->pin, LOW);
-}
-
-void releaseButton(Button *button) {
-    digitalWrite(button->pin, HIGH);
-}
-
-void setUp(void) {
+void resetActions() {
     mapOfActions[PRESS_A] = 0;
     mapOfActions[LONG_PRESS_A] = 0;
     mapOfActions[PRESS_B] = 0;
@@ -73,6 +65,18 @@ void setUp(void) {
     mapOfActions[SIMULTANEOUS_LONG_PRESS_B_C] = 0;
     mapOfActions[SIMULTANEOUS_PRESS_A_B_C] = 0;
     mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C] = 0;
+}
+
+void pushButton(Button *button) {
+    digitalWrite(button->pin, LOW);
+}
+
+void releaseButton(Button *button) {
+    digitalWrite(button->pin, HIGH);
+}
+
+void setUp(void) {
+    resetActions();
 
     releaseButton(buttonA);
     releaseButton(buttonB);
