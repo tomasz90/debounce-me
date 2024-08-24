@@ -41,6 +41,7 @@ private:
     bool wasPressed(Button *button) const;
     bool wasReleased(Button *button) const;
     bool isLongPressed(Button *button) const;
+    bool isSimultaneousLongPressed(Button *button);
     bool& wasLongPressed(Button *button);
 
     bool isOneButtonPressed() const;
