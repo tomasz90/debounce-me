@@ -217,9 +217,7 @@ void setup() {
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB, buttonC}, simultaneousPressABC);
     buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC);
 
-    auto polled = [](TimerHandle_t xTimer) { buttonsHandler.poll();};
-    auto xTimer = xTimerCreate(NULL, pdMS_TO_TICKS(1), true, NULL, polled);
-    xTimerStart(xTimer, 0);
+    buttonsHandler.pollOnce();
 
     UNITY_BEGIN();
 
@@ -234,8 +232,6 @@ void setup() {
 
     UNITY_END();
 
-    xTimerStop(xTimer, 0);
-    xTimerDelete(xTimer, 0);
 }
 
 void loop() {

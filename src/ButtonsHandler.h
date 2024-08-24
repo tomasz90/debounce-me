@@ -16,6 +16,7 @@ public:
     void setSimultaneousBehavior(std::set<Button*> _buttons, std::function<void()> behavior);
     void setSimultaneousBehaviorLong(std::set<Button*> _buttons, std::function<void()> behavior);
 
+    void pollOnce(int pollInterval = 1);
     void poll();
 
 private:

@@ -73,6 +73,24 @@ void ButtonsHandler::simultaneousOnPressLong() {
     wasSimultaneousPress = true;
 }
 
+// this function can be used to poll inside `startup()`, `loop()` is not required.
+// use either this or `poll()`
+#if defined(ESP32) || \
+    defined(NRF52840_XXAA) || \
+    defined(RASPBERRY_PI_PICO) || \
+    defined(RASPBERRY_PI_PICO_W) || \
+    defined(USE_POLL_ONCE)
+void ButtonsHandler::pollOnce(int pollInterval) {
+    auto task = [](TimerHandle_t xTimer) {
+        auto _this = static_cast<ButtonsHandler *>(pvTimerGetTimerID(xTimer));
+        _this->poll();
+    };
+    auto timer = xTimerCreate(NULL, pdMS_TO_TICKS(pollInterval), true, this, task);
+    xTimerStart(timer, 0);
+}
+#endif
+
+// this function can be used to poll inside `loop()`
 void ButtonsHandler::poll() {
     std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
         pollState(button);
