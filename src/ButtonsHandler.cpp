@@ -116,20 +116,21 @@ void ButtonsHandler::processButtonState(Button *button) {
         wasLongPress = true;
         buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
         simultaneousButtons.clear();
+    // SIMULTANEOUS LONG PRESS CALLBACKS
     } else if (isPressed(button) && isSimultaneousLongPress && !wasSimultaneousPress && !isOneButtonPressed()) {
         simultaneousOnPressLong();
         simultaneousButtons.clear();
-        // PRESS CALLBACKS
-    } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
-        if (isOneButtonPressed()) {
-            button->onPress();
-        } else {
-            simultaneousOnPress();
-        }
+    // SIMULTANEOUS PRESS CALLBACKS
+    } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress && isOneButtonPressed()) {
+        button->onPress();
         buttonLastStartPressed[button] = 0;
         simultaneousButtons.clear();
-
-        // SET VARIABLES WHEN BUTTON WAS JUST PRESSED
+    // PRESS CALLBACKS
+    } else if(wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
+        simultaneousOnPress();
+        buttonLastStartPressed[button] = 0;
+        simultaneousButtons.clear();
+    // SET VARIABLES WHEN BUTTON WAS JUST PRESSED
     } else if (wasReleased(button)) {
         buttonLastStartPressed[button] = millis();
         simultaneousButtons.insert(button);
