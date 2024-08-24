@@ -72,18 +72,6 @@ bool ButtonsHandler::isOneButtonPressed() const {
     return simultaneousButtons.size() < 2;  // this is required to be able to run multiple OnPressLong
 }
 
-void ButtonsHandler::simultaneousOnPress() {
-    auto behavior = simultaneousBehaviors[simultaneousButtons];
-    if (behavior) behavior();
-    wasSimultaneousPress = true;
-}
-
-void ButtonsHandler::simultaneousOnPressLong() {
-    auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
-    if (behavior) behavior();
-    wasSimultaneousPress = true;
-}
-
 // this function can be used to poll inside `startup()`, `loop()` is not required.
 // use either this or `poll()`
 #if defined(ESP32) || \
@@ -113,31 +101,50 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
     bool &wasLongPress = wasLongPressed(button);
 
-    // SIMULTANEOUS LONG PRESS CALLBACKS
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
-        simultaneousOnPressLong();
-        simultaneousButtons.clear();
-    // LONG PRESS CALLBACKS
+        onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
-        button->onPressLong();
-        wasLongPress = true;
-        buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
-        simultaneousButtons.clear();
-    // SIMULTANEOUS PRESS CALLBACKS
+        onPressLong(button);
     } else if (wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress && isOneButtonPressed()) {
-        button->onPress();
-        buttonLastStartPressed[button] = 0;
-        simultaneousButtons.clear();
-    // PRESS CALLBACKS
+        onPress(button);
     } else if (wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress) {
-        simultaneousOnPress();
-        buttonLastStartPressed[button] = 0;
-        simultaneousButtons.clear();
-    // SET VARIABLES WHEN BUTTON WAS JUST PRESSED
+        onSimultaneousPress(button);
     } else if (wasReleased(button)) {
-        buttonLastStartPressed[button] = millis();
-        simultaneousButtons.insert(button);
-        wasLongPress = false;
-        wasSimultaneousPress = false;
+        onWasReleased(button);
     }
+}
+
+void ButtonsHandler::onSimultaneousPressLong() {
+    auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
+    if (behavior) behavior();
+    simultaneousButtons.clear();
+    wasSimultaneousPress = true;
+}
+
+void ButtonsHandler::onPressLong(Button *button) {
+    button->onPressLong();
+    simultaneousButtons.clear();
+    wasLongPressed(button) = true;
+    buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
+}
+
+void ButtonsHandler::onSimultaneousPress(Button *button) {
+    auto behavior = simultaneousBehaviors[simultaneousButtons];
+    if (behavior) behavior();
+    simultaneousButtons.clear();
+    wasSimultaneousPress = true;
+    buttonLastStartPressed[button] = 0;
+}
+
+void ButtonsHandler::onPress(Button *button) {
+    button->onPress();
+    simultaneousButtons.clear();
+    buttonLastStartPressed[button] = 0;
+}
+
+void ButtonsHandler::onWasReleased(Button *button) {
+    simultaneousButtons.insert(button);
+    wasSimultaneousPress = false;
+    wasLongPressed(button) = false;
+    buttonLastStartPressed[button] = millis();
 }

@@ -35,19 +35,24 @@ private:
     std::map<Button*, bool> buttonWasLongPressed;
 
     void pollState(Button *button) const;
-    void processButtonState(Button *button);
     void resetState(Button *button) const;
 
     bool isPressed(Button *button) const;
     bool wasPressed(Button *button) const;
     bool wasReleased(Button *button) const;
+
     bool isLongPressed(Button *button) const;
     bool isSimultaneousLongPressed(Button *button);
     bool& wasLongPressed(Button *button);
-
     bool isOneButtonPressed() const;
-    void simultaneousOnPress();
-    void simultaneousOnPressLong();
+
+    void processButtonState(Button *button);
+
+    void onSimultaneousPressLong();
+    void onPressLong(Button *button);
+    void onSimultaneousPress(Button *button);
+    void onPress(Button *button);
+    void onWasReleased(Button *button);
 };
 
 
