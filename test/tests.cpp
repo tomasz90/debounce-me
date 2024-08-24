@@ -209,13 +209,13 @@ void setup() {
     buttonC->setBehavior(pressC, longPressC, LONG_PRESS_TIME, true);
 
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, simultaneousPressAB);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB, LONG_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC, LONG_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonB, buttonC}, simultaneousPressBC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC, LONG_PRESS_TIME);
     buttonsHandler.setSimultaneousBehavior({buttonA, buttonB, buttonC}, simultaneousPressABC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC);
+    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC, LONG_PRESS_TIME);
 
     buttonsHandler.pollOnce();
 

@@ -14,7 +14,7 @@ public:
 
     void setDebounceTime(unsigned int time);
     void setSimultaneousBehavior(std::set<Button*> _buttons, std::function<void()> behavior);
-    void setSimultaneousBehaviorLong(std::set<Button*> _buttons, std::function<void()> behavior);
+    void setSimultaneousBehaviorLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
     void pollOnce(int pollInterval = 1);
     void poll();
@@ -25,9 +25,11 @@ private:
     std::set<Button*> simultaneousButtons;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
+    std::map<std::set<Button*>, int> simultaneousLongPressTimes;
 
     bool wasSimultaneousPress = false;
     unsigned int debounceTime = 20;
+    unsigned int simultaneousLongPressTime;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, bool> buttonWasLongPressed;

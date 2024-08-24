@@ -15,8 +15,9 @@ void ButtonsHandler::setSimultaneousBehavior(std::set<Button *> _buttons, std::f
     simultaneousBehaviors[_buttons] = std::move(behavior);
 }
 
-void ButtonsHandler::setSimultaneousBehaviorLong(std::set<Button *> _buttons, std::function<void()> behavior) {
+void ButtonsHandler::setSimultaneousBehaviorLong(std::set<Button *> _buttons, std::function<void()> behavior, unsigned int longPressTime) {
     simultaneousBehaviorsLong[_buttons] = std::move(behavior);
+    simultaneousLongPressTimes[_buttons] = longPressTime;
 }
 
 void ButtonsHandler::pollState(Button *button) const {
@@ -98,19 +99,19 @@ void ButtonsHandler::poll() {
 
     std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
         bool isLongPress = isLongPressed(button) && button->isLongPressSupported;
+        bool isSimultaneousLongPress =
+                millis() - buttonLastStartPressed.at(button) >= simultaneousLongPressTimes[simultaneousButtons];
         bool &wasLongPress = wasLongPressed(button);
-
         // LONG PRESS CALLBACKS
-        if (isPressed(button) && isLongPress && !wasSimultaneousPress) {
-            if (isOneButtonPressed()) {
-                button->onPressLong();
-                wasLongPress = true;
-            } else {
-                simultaneousOnPressLong();
-            }
+        if (isPressed(button) && isLongPress && !wasSimultaneousPress && isOneButtonPressed()) {
+            button->onPressLong();
+            wasLongPress = true;
             buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
             simultaneousButtons.clear();
-
+        } else if (isPressed(button) && isSimultaneousLongPress && !wasSimultaneousPress && !isOneButtonPressed()) {
+            simultaneousOnPressLong();
+            buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
+            simultaneousButtons.clear();
         // PRESS CALLBACKS
         } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
             if (isOneButtonPressed()) {
