@@ -35,6 +35,7 @@ private:
     std::map<Button*, bool> buttonWasLongPressed;
 
     void pollState(Button *button) const;
+    void processButtonState(Button *button);
     void resetState(Button *button) const;
 
     bool isPressed(Button *button) const;

@@ -100,44 +100,40 @@ void ButtonsHandler::pollOnce(int pollInterval) {
 
 // this function can be used to poll inside `loop()`
 void ButtonsHandler::poll() {
-    std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
-        pollState(button);
-    });
+    for (auto &button : buttons) pollState(button);
+    for (auto &button : buttons) processButtonState(button);
+    for (auto &button : buttons) resetState(button);
+}
 
-    std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
-        bool isLongPress = isLongPressed(button);
-        bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
-        bool &wasLongPress = wasLongPressed(button);
+void ButtonsHandler::processButtonState(Button *button) {
+    bool isLongPress = isLongPressed(button);
+    bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
+    bool &wasLongPress = wasLongPressed(button);
 
-        // LONG PRESS CALLBACKS
-        if (isPressed(button) && isLongPress && !wasSimultaneousPress && isOneButtonPressed()) {
-            button->onPressLong();
-            wasLongPress = true;
-            buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
-            simultaneousButtons.clear();
-        } else if (isPressed(button) && isSimultaneousLongPress && !wasSimultaneousPress && !isOneButtonPressed()) {
-            simultaneousOnPressLong();
-            simultaneousButtons.clear();
+    // LONG PRESS CALLBACKS
+    if (isPressed(button) && isLongPress && !wasSimultaneousPress && isOneButtonPressed()) {
+        button->onPressLong();
+        wasLongPress = true;
+        buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
+        simultaneousButtons.clear();
+    } else if (isPressed(button) && isSimultaneousLongPress && !wasSimultaneousPress && !isOneButtonPressed()) {
+        simultaneousOnPressLong();
+        simultaneousButtons.clear();
         // PRESS CALLBACKS
-        } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
-            if (isOneButtonPressed()) {
-                button->onPress();
-            } else {
-                simultaneousOnPress();
-            }
-            buttonLastStartPressed[button] = 0;
-            simultaneousButtons.clear();
+    } else if (wasPressed(button) && !isLongPress && !wasLongPress && !wasSimultaneousPress) {
+        if (isOneButtonPressed()) {
+            button->onPress();
+        } else {
+            simultaneousOnPress();
+        }
+        buttonLastStartPressed[button] = 0;
+        simultaneousButtons.clear();
 
         // SET VARIABLES WHEN BUTTON WAS JUST PRESSED
-        } else if (wasReleased(button)) {
-            buttonLastStartPressed[button] = millis();
-            simultaneousButtons.insert(button);
-            wasLongPress = false;
-            wasSimultaneousPress = false;
-        }
-    });
-
-    std::for_each(buttons.begin(), buttons.end(), [this](Button *button) {
-        resetState(button);
-    });
+    } else if (wasReleased(button)) {
+        buttonLastStartPressed[button] = millis();
+        simultaneousButtons.insert(button);
+        wasLongPress = false;
+        wasSimultaneousPress = false;
+    }
 }
