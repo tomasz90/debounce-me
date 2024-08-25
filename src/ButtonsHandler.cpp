@@ -83,8 +83,14 @@ void ButtonsHandler::pollOnce(int pollInterval) {
         auto _this = static_cast<ButtonsHandler *>(pvTimerGetTimerID(xTimer));
         _this->poll();
     };
-    auto timer = xTimerCreate(NULL, pdMS_TO_TICKS(pollInterval), true, this, task);
+    timer = xTimerCreate(NULL, pdMS_TO_TICKS(pollInterval), true, this, task);
     xTimerStart(timer, 0);
+}
+
+void ButtonsHandler::stopPolling() {
+    if (timer == nullptr) return;
+    xTimerStop(timer, 0);
+    xTimerDelete(timer, 0);
 }
 #endif
 

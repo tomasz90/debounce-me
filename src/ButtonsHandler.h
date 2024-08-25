@@ -16,8 +16,9 @@ public:
     void setSimultaneousBehavior(std::set<Button*> _buttons, std::function<void()> behavior);
     void setSimultaneousBehaviorLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
-    void pollOnce(int pollInterval = 1);
     void poll();
+    void pollOnce(int pollInterval = 1);
+    void stopPolling();
 
 private:
     std::vector<Button*> buttons;
@@ -32,6 +33,8 @@ private:
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, bool> buttonWasLongPressed;
+
+    TimerHandle_t timer;
 
     void pollState(Button *button) const;
     void resetState(Button *button) const;
