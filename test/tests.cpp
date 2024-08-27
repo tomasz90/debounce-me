@@ -10,6 +10,7 @@
 #define SMALL_DELAY 20
 #define LONG_PRESS_TIME 100
 #define LONG_PRESS_DELAY (LONG_PRESS_TIME * 1.1)
+#define DOUBLE_PRESS_TIME 50
 #define SIMULTANEOUS_PRESS_TIME 200
 #define SIMULTANEOUS_LONG_PRESS_DELAY (SIMULTANEOUS_PRESS_TIME * 1.1)
 
@@ -37,7 +38,7 @@ void testOnPress(void) {
     delay(SMALL_DELAY);
 
     releaseButton(buttonA);
-    delay(SMALL_DELAY);
+    delay(DOUBLE_PRESS_TIME + SMALL_DELAY);
 
     assertAllEqual0Except(PRESS_A);
 }
@@ -50,6 +51,22 @@ void testOnPressLong(void) {
     delay(SMALL_DELAY);
 
     assertAllEqual0Except(LONG_PRESS_A);
+}
+
+void testOnPressDouble(void) {
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    assertAllEqual0Except(DOUBLE_PRESS_A);
 }
 
 void testOnPressLongMultiple(void) {
@@ -162,7 +179,7 @@ void testCombinations(void) {
     delay(SMALL_DELAY);
 
     releaseButton(buttonA);
-    delay(SMALL_DELAY);
+    delay(DOUBLE_PRESS_TIME + SMALL_DELAY);
 
     assertAllEqual0Except(PRESS_A);
     resetActions();
@@ -263,6 +280,8 @@ void setup() {
     buttonB->setClickLong(longPressB, LONG_PRESS_TIME, true);
     buttonC->setClickLong(longPressC, LONG_PRESS_TIME, true);
 
+    buttonA->setClickDouble(doublePressA, DOUBLE_PRESS_TIME);
+
     buttonsHandler.setSimultaneousClick({buttonA, buttonB}, simultaneousPressAB);
     buttonsHandler.setSimultaneousClickLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
@@ -280,6 +299,7 @@ void setup() {
 
     RUN_TEST(testOnPress);
     RUN_TEST(testOnPressLong);
+    RUN_TEST(testOnPressDouble);
     RUN_TEST(testOnPressLongMultiple);
     RUN_TEST(testOnPressSimultaneous);
     RUN_TEST(testOnPressSimultaneous2);

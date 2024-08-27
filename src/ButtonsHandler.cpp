@@ -112,6 +112,8 @@ void ButtonsHandler::processButtonState(Button *button) {
         onPressLong(button);
     } else if (wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress && isOneButtonPressed()) {
         onPress(button);
+    } else if(buttonLastClicked[button] != 0 && millis() - buttonLastClicked[button] > button->doublePressTime) {
+        onPress2(button);
     } else if (wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress) {
         onSimultaneousPress(button);
     } else if (wasReleased(button)) {
@@ -143,6 +145,7 @@ void ButtonsHandler::onSimultaneousPress(Button *button) {
 
 void ButtonsHandler::onPress(Button *button) {
     if (button->onPressDouble == nullptr) {
+        Serial.println("onPressDouble is not set");
         button->onPress();
         simultaneousButtons.clear();
         buttonLastStartPressed[button] = 0;
@@ -150,18 +153,22 @@ void ButtonsHandler::onPress(Button *button) {
     }
 
     if (buttonLastClicked[button] == 0) {
+        Serial.println("buttonLastClicked is 0");
         buttonLastClicked[button] = millis();
         return;
     }
 
     if (millis() - buttonLastClicked[button] <= button->doublePressTime) {
+        Serial.println("onPressDouble");
         button->onPressDouble();
         simultaneousButtons.clear();
         buttonLastStartPressed[button] = 0;
         buttonLastClicked[button] = 0;
         return;
     }
+}
 
+void ButtonsHandler::onPress2(Button *button) {
     button->onPress();
     simultaneousButtons.clear();
     buttonLastStartPressed[button] = 0;

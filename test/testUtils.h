@@ -4,10 +4,13 @@
 enum Actions {
     PRESS_A,
     LONG_PRESS_A,
+    DOUBLE_PRESS_A,
     PRESS_B,
     LONG_PRESS_B,
+    DOUBLE_PRESS_B,
     PRESS_C,
     LONG_PRESS_C,
+    DOUBLE_PRESS_C,
     SIMULTANEOUS_PRESS_A_B,
     SIMULTANEOUS_LONG_PRESS_A_B,
     SIMULTANEOUS_PRESS_A_C,
@@ -22,10 +25,13 @@ const char *getActionName(Actions action) {
     std::map <Actions, std::string> actionNames = {
             {PRESS_A,                       "PRESS_A"},
             {LONG_PRESS_A,                  "LONG_PRESS_A"},
+            {DOUBLE_PRESS_A,                "DOUBLE_PRESS_A"},
             {PRESS_B,                       "PRESS_B"},
             {LONG_PRESS_B,                  "LONG_PRESS_B"},
+            {DOUBLE_PRESS_B,                "DOUBLE_PRESS_B"},
             {PRESS_C,                       "PRESS_C"},
             {LONG_PRESS_C,                  "LONG_PRESS_C"},
+            {DOUBLE_PRESS_C,                "DOUBLE_PRESS_C"},
             {SIMULTANEOUS_PRESS_A_B,        "SIMULTANEOUS_PRESS_A_B"},
             {SIMULTANEOUS_LONG_PRESS_A_B,   "SIMULTANEOUS_LONG_PRESS_A_B"},
             {SIMULTANEOUS_PRESS_A_C,        "SIMULTANEOUS_PRESS_A_C"},
@@ -45,13 +51,19 @@ void pressA() { mapOfActions[PRESS_A]++; }
 
 void longPressA() { mapOfActions[LONG_PRESS_A]++; }
 
+void doublePressA() { mapOfActions[DOUBLE_PRESS_A]++; }
+
 void pressB() { mapOfActions[PRESS_B]++; }
 
 void longPressB() { mapOfActions[LONG_PRESS_B]++; }
 
+void doublePressB() { mapOfActions[DOUBLE_PRESS_B]++; }
+
 void pressC() { mapOfActions[PRESS_C]++; }
 
 void longPressC() { mapOfActions[LONG_PRESS_C]++; }
+
+void doublePressC() { mapOfActions[DOUBLE_PRESS_C]++; }
 
 void simultaneousPressAB() { mapOfActions[SIMULTANEOUS_PRESS_A_B]++; }
 
@@ -72,10 +84,13 @@ void simultaneousLongPressABC() { mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C]++;
 void resetActions() {
     mapOfActions[PRESS_A] = 0;
     mapOfActions[LONG_PRESS_A] = 0;
+    mapOfActions[DOUBLE_PRESS_A] = 0;
     mapOfActions[PRESS_B] = 0;
     mapOfActions[LONG_PRESS_B] = 0;
+    mapOfActions[DOUBLE_PRESS_B] = 0;
     mapOfActions[PRESS_C] = 0;
     mapOfActions[LONG_PRESS_C] = 0;
+    mapOfActions[DOUBLE_PRESS_C] = 0;
     mapOfActions[SIMULTANEOUS_PRESS_A_B] = 0;
     mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B] = 0;
     mapOfActions[SIMULTANEOUS_PRESS_A_C] = 0;

@@ -55,6 +55,7 @@ private:
     void onPressLong(Button *button);
     void onSimultaneousPress(Button *button);
     void onPress(Button *button);
+    void onPress2(Button *button);
     void onWasReleased(Button *button);
 };
 
