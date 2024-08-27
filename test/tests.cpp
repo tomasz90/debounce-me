@@ -255,19 +255,23 @@ void setup() {
     pinMode(BUTTON_PIN_B, OUTPUT);
     pinMode(BUTTON_PIN_C, OUTPUT);
 
-    buttonA->setBehavior(pressA, longPressA, LONG_PRESS_TIME, true);
-    buttonB->setBehavior(pressB, longPressB, LONG_PRESS_TIME, true);
-    buttonC->setBehavior(pressC, longPressC, LONG_PRESS_TIME, true);
+    buttonA->setClick(pressA);
+    buttonB->setClick(pressB);
+    buttonC->setClick(pressC);
 
-    buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, simultaneousPressAB);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
+    buttonA->setClickLong(longPressA, LONG_PRESS_TIME, true);
+    buttonB->setClickLong(longPressB, LONG_PRESS_TIME, true);
+    buttonC->setClickLong(longPressC, LONG_PRESS_TIME, true);
+
+    buttonsHandler.setSimultaneousClick({buttonA, buttonB}, simultaneousPressAB);
+    buttonsHandler.setSimultaneousClickLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
     // buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setSimultaneousBehavior({buttonB, buttonC}, simultaneousPressBC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setSimultaneousBehavior({buttonA, buttonB, buttonC}, simultaneousPressABC);
-    buttonsHandler.setSimultaneousBehaviorLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
+    buttonsHandler.setSimultaneousClickLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setSimultaneousClick({buttonB, buttonC}, simultaneousPressBC);
+    buttonsHandler.setSimultaneousClickLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setSimultaneousClick({buttonA, buttonB, buttonC}, simultaneousPressABC);
+    buttonsHandler.setSimultaneousClickLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
                                                SIMULTANEOUS_PRESS_TIME);
 
     buttonsHandler.pollOnce();

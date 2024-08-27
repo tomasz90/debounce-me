@@ -11,12 +11,12 @@ void ButtonsHandler::setDebounceTime(unsigned int time) {
     debounceTime = time;
 }
 
-void ButtonsHandler::setSimultaneousBehavior(std::set<Button *> _buttons, std::function<void()> behavior) {
+void ButtonsHandler::setSimultaneousClick(std::set<Button *> _buttons, std::function<void()> behavior) {
     simultaneousBehaviors[_buttons] = std::move(behavior);
 }
 
-void ButtonsHandler::setSimultaneousBehaviorLong(std::set<Button *> _buttons, std::function<void()> behavior,
-                                                 unsigned int longPressTime) {
+void ButtonsHandler::setSimultaneousClickLong(std::set<Button *> _buttons, std::function<void()> behavior,
+                                              unsigned int longPressTime) {
     simultaneousBehaviorsLong[_buttons] = std::move(behavior);
     simultaneousLongPressTimes[_buttons] = longPressTime;
 }
@@ -51,7 +51,7 @@ bool ButtonsHandler::wasReleased(Button *button) const {
 }
 
 bool ButtonsHandler::isLongPressed(Button *button) const {
-    if (!button->isLongPressSupported) return false;
+    if (button->onPressLong == nullptr) return false;
     auto lastStartPressed = buttonLastStartPressed.at(button);
     auto matchTime = millis() - lastStartPressed >= button->longPressTime && lastStartPressed != 0;
     return matchTime && isOneButtonPressed();
@@ -142,9 +142,30 @@ void ButtonsHandler::onSimultaneousPress(Button *button) {
 }
 
 void ButtonsHandler::onPress(Button *button) {
+    if (button->onPressDouble == nullptr) {
+        button->onPress();
+        simultaneousButtons.clear();
+        buttonLastStartPressed[button] = 0;
+        return;
+    }
+
+    if (buttonLastClicked[button] == 0) {
+        buttonLastClicked[button] = millis();
+        return;
+    }
+
+    if (millis() - buttonLastClicked[button] <= button->doublePressTime) {
+        button->onPressDouble();
+        simultaneousButtons.clear();
+        buttonLastStartPressed[button] = 0;
+        buttonLastClicked[button] = 0;
+        return;
+    }
+
     button->onPress();
     simultaneousButtons.clear();
     buttonLastStartPressed[button] = 0;
+    buttonLastClicked[button] = 0;
 }
 
 void ButtonsHandler::onWasReleased(Button *button) {

@@ -16,12 +16,13 @@ struct Button {
     byte pin;
     Mode mode;
     bool invertedState;
-    bool isLongPressSupported;
     bool isMultipleLongPressSupported;
     unsigned int longPressTime;
+    unsigned int doublePressTime;
 
     std::function<void()> onPress;
     std::function<void()> onPressLong;
+    std::function<void()> onPressDouble;
 
     struct {
         bool lastRawState;
@@ -32,10 +33,14 @@ struct Button {
 
     Button(byte buttonPin, Mode buttonMode);
 
-    void setBehavior(std::function<void()> buttonOnPress,
-                     std::function<void()> buttonOnPressLong = nullptr,
-                     unsigned int longPressTime = 1000,
-                     bool isMultipleLongPressSupported = false);
+    void setClick(std::function<void()> buttonOnPress);
+
+    void setClickLong(std::function<void()> buttonOnPressLong,
+                  unsigned int longPressTime = 1000,
+                  bool isMultipleLongPressSupported = false);
+
+    void setClickDouble(std::function<void()> buttonOnPressDouble,
+                  unsigned int doublePressTime = 300);
 
     void setLongPressTime(unsigned int time);
     bool operator<(const Button &other) const;

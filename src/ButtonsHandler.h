@@ -13,8 +13,8 @@ public:
     ButtonsHandler(std::initializer_list<Button*> buttons);
 
     void setDebounceTime(unsigned int time);
-    void setSimultaneousBehavior(std::set<Button*> _buttons, std::function<void()> behavior);
-    void setSimultaneousBehaviorLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
+    void setSimultaneousClick(std::set<Button*> _buttons, std::function<void()> behavior);
+    void setSimultaneousClickLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
     void poll();
     void pollOnce(int pollInterval = 1);
@@ -32,6 +32,7 @@ private:
     unsigned int debounceTime = 20;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
+    std::map<Button*, unsigned long> buttonLastClicked;
     std::map<Button*, bool> buttonWasLongPressed;
 
     TimerHandle_t timer;
