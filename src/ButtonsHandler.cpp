@@ -106,8 +106,8 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
     bool &wasLongPress = wasLongPressed(button);
 
-    bool _wasPressed =
-            wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress && isOneButtonPressed();
+    bool _wasPressed = wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress;
+    bool oneButtonPressed = isOneButtonPressed();
     bool registeredPress = buttonLastClicked[button] != 0;
     bool elapsedTime = millis() - buttonLastClicked[button] > button->doublePressTime;
 
@@ -115,13 +115,13 @@ void ButtonsHandler::processButtonState(Button *button) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-    } else if (_wasPressed && button->onPressDouble == nullptr || (registeredPress && elapsedTime)) {
+    } else if (_wasPressed && oneButtonPressed && button->onPressDouble == nullptr || (registeredPress && elapsedTime)) {
         onPress(button);
-    } else if (_wasPressed && !registeredPress) {
-        registerPress(button);
-    } else if (_wasPressed && !elapsedTime) {
+    } else if (_wasPressed && oneButtonPressed && !elapsedTime) {
         onDoublePress(button);
-    } else if (wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPress) {
+    } else if (_wasPressed && oneButtonPressed && !registeredPress) {
+        registerPress(button);
+    } else if (_wasPressed) {
         onSimultaneousPress(button);
     } else if (wasReleased(button)) {
         onWasReleased(button);
