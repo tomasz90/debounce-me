@@ -69,6 +69,30 @@ void testOnPressDouble(void) {
     assertAllEqual0Except(DOUBLE_PRESS_A);
 }
 
+void testOnPressDouble2(void) {
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+
+    releaseButton(buttonA);
+    delay(SMALL_DELAY);
+
+    assertAllEqual0Except(DOUBLE_PRESS_A);
+    resetActions();
+
+    pushButton(buttonA);
+    delay(SMALL_DELAY);
+    releaseButton(buttonA);
+    delay(DOUBLE_PRESS_TIME + SMALL_DELAY);
+
+    assertAllEqual0Except(PRESS_A);
+}
+
 void testOnPressLongMultiple(void) {
     pushButton(buttonA);
     delay(3 * LONG_PRESS_DELAY);
@@ -300,6 +324,7 @@ void setup() {
     RUN_TEST(testOnPress);
     RUN_TEST(testOnPressLong);
     RUN_TEST(testOnPressDouble);
+    RUN_TEST(testOnPressDouble2);
     RUN_TEST(testOnPressLongMultiple);
     RUN_TEST(testOnPressSimultaneous);
     RUN_TEST(testOnPressSimultaneous2);

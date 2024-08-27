@@ -40,7 +40,7 @@ struct Button {
                   bool isMultipleLongPressSupported = false);
 
     void setClickDouble(std::function<void()> buttonOnPressDouble,
-                  unsigned int doublePressTime = 300);
+                  unsigned int doublePressTime = 250);
 
     void setLongPressTime(unsigned int time);
     bool operator<(const Button &other) const;
