@@ -11,11 +11,11 @@ void ButtonsHandler::setDebounceTime(unsigned int time) {
     debounceTime = time;
 }
 
-void ButtonsHandler::setSimultaneousClick(std::set<Button *> _buttons, std::function<void()> behavior) {
+void ButtonsHandler::setClickSimultaneous(std::set<Button *> _buttons, std::function<void()> behavior) {
     simultaneousBehaviors[_buttons] = std::move(behavior);
 }
 
-void ButtonsHandler::setSimultaneousClickLong(std::set<Button *> _buttons, std::function<void()> behavior,
+void ButtonsHandler::setClickSimultaneousLong(std::set<Button *> _buttons, std::function<void()> behavior,
                                               unsigned int longPressTime) {
     simultaneousBehaviorsLong[_buttons] = std::move(behavior);
     simultaneousLongPressTimes[_buttons] = longPressTime;

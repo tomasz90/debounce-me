@@ -306,15 +306,15 @@ void setup() {
 
     buttonA->setClickDouble(doublePressA, DOUBLE_PRESS_TIME);
 
-    buttonsHandler.setSimultaneousClick({buttonA, buttonB}, simultaneousPressAB);
-    buttonsHandler.setSimultaneousClickLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous({buttonA, buttonB}, simultaneousPressAB);
+    buttonsHandler.setClickSimultaneousLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
-    // buttonsHandler.setSimultaneousBehavior({buttonA, buttonC}, simultaneousPressAC);
-    buttonsHandler.setSimultaneousClickLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setSimultaneousClick({buttonB, buttonC}, simultaneousPressBC);
-    buttonsHandler.setSimultaneousClickLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setSimultaneousClick({buttonA, buttonB, buttonC}, simultaneousPressABC);
-    buttonsHandler.setSimultaneousClickLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
+    // buttonsHandler.setClickSimultaneous({buttonA, buttonC}, simultaneousPressAC);
+    buttonsHandler.setClickSimultaneousLong({buttonA, buttonC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous({buttonB, buttonC}, simultaneousPressBC);
+    buttonsHandler.setClickSimultaneousLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous({buttonA, buttonB, buttonC}, simultaneousPressABC);
+    buttonsHandler.setClickSimultaneousLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
                                                SIMULTANEOUS_PRESS_TIME);
 
     buttonsHandler.pollOnce();

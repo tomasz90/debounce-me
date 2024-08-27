@@ -13,8 +13,8 @@ public:
     ButtonsHandler(std::initializer_list<Button*> buttons);
 
     void setDebounceTime(unsigned int time);
-    void setSimultaneousClick(std::set<Button*> _buttons, std::function<void()> behavior);
-    void setSimultaneousClickLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
+    void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
+    void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
     void poll();
     void pollOnce(int pollInterval = 1);
