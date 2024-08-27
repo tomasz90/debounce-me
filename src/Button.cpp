@@ -14,22 +14,21 @@ Button::Button(byte buttonPin,
     state.lastChangeTime = 0;
 }
 
-void Button::setClick(std::function<void()> onPress) {
-    this->onPress = std::move(onPress);
+void Button::setClick(std::function<void()> behavior) {
+    this->onPress = std::move(behavior);
 }
 
-void Button::setClickLong(std::function<void()> onPressLong,
-                      unsigned int longPressTime,
-                      bool isMultipleLongPressSupported) {
-    this->onPressLong = std::move(onPressLong);
-    this->longPressTime = longPressTime;
-    this->isMultipleLongPressSupported = isMultipleLongPressSupported;
+void Button::setClickLong(std::function<void()> behavior,
+                          unsigned int _longPressTime,
+                          bool _isMultipleLongPressSupported) {
+    this->onPressLong = std::move(behavior);
+    this->longPressTime = _longPressTime;
+    this->isMultipleLongPressSupported = _isMultipleLongPressSupported;
 }
 
-void Button::setClickDouble(std::function<void()> onPressDouble,
-                    unsigned int doublePressTime) {
-    this->onPressDouble = std::move(onPressDouble);
-    this->doublePressTime = doublePressTime;
+void Button::setClickDouble(std::function<void()> behavior, unsigned int _doublePressTime) {
+    this->onPressDouble = std::move(behavior);
+    this->doublePressTime = _doublePressTime;
 }
 
 bool Button::operator<(const Button &other) const {

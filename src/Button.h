@@ -33,17 +33,17 @@ struct Button {
 
     Button(byte buttonPin, Mode buttonMode);
 
-    void setClick(std::function<void()> buttonOnPress);
+    void setClick(std::function<void()> behavior);
 
-    void setClickLong(std::function<void()> buttonOnPressLong,
-                  unsigned int longPressTime = 1000,
-                  bool isMultipleLongPressSupported = false);
+    void setClickLong(std::function<void()> behavior,
+                      unsigned int _longPressTime = 1000,
+                      bool _isMultipleLongPressSupported = false);
 
-    void setClickDouble(std::function<void()> buttonOnPressDouble,
-                  unsigned int doublePressTime = 250);
+    void setClickDouble(std::function<void()> behavior, unsigned int _doublePressTime = 250);
 
     bool operator<(const Button &other) const;
-    bool operator==(const Button& other) const;
+
+    bool operator==(const Button &other) const;
 };
 
 
