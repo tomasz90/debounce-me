@@ -42,7 +42,6 @@ struct Button {
     void setClickDouble(std::function<void()> buttonOnPressDouble,
                   unsigned int doublePressTime = 250);
 
-    void setLongPressTime(unsigned int time);
     bool operator<(const Button &other) const;
     bool operator==(const Button& other) const;
 };

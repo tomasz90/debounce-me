@@ -116,7 +116,7 @@ void ButtonsHandler::processButtonState(Button *button) {
         onPressLong(button);
     } else if (_wasPressed && _isOneButtonPressed && !isDoublePressSupported || (isRegisteredPress && isElapsedTime)) {
         onPress(button);
-    } else if (_wasPressed && _isOneButtonPressed && !isElapsedTime) {
+    } else if (_wasPressed && _isOneButtonPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
     } else if (_wasPressed && _isOneButtonPressed && !isRegisteredPress) {
         registerPress(button);

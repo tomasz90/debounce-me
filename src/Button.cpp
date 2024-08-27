@@ -32,10 +32,6 @@ void Button::setClickDouble(std::function<void()> onPressDouble,
     this->doublePressTime = doublePressTime;
 }
 
-void Button::setLongPressTime(unsigned int time) {
-    longPressTime = time;
-}
-
 bool Button::operator<(const Button &other) const {
     return false;
 }

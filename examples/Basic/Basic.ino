@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include "Button.h"
-#include "ButtonsHandler.h"
+#include <Button.h>
+#include <ButtonsHandler.h>
 
 #define BUTTON_PIN_A 27
 #define BUTTON_PIN_B 34
@@ -18,8 +18,9 @@ ButtonsHandler buttonsHandler({buttonA, buttonB});
 
 void setup() {
     Serial.begin(115200);
-    buttonA->setBehavior(pressed, pressedLong);
-    buttonsHandler.setSimultaneousBehavior({buttonA, buttonB}, combination);
+    buttonA->setClick(pressed);
+    buttonA->setClickLong(pressedLong);
+    buttonsHandler.setClickSimultaneous({buttonA, buttonB}, combination);
     buttonsHandler.pollOnce(); // poll here once (need to use FreeRTOS)
 }
 
