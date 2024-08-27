@@ -1,7 +1,7 @@
 {
   "name": "DebounceMe",
-  "version": "2.0.9",
-  "description": "This library solves bounce problem, imperfection of physical buttons. It supports short clicks and long clicks and combination of clicks!",
+  "version": "3.0.2",
+  "description": "This library solves bounce problem, imperfection of physical buttons. It supports short clicks, long clicks, double clicks and combination of clicks!",
   "keywords": "button, buttons, switch, switches, click, clicks, debounce, debouncer, input, IO",
   "repository": {
     "type": "git",

@@ -114,7 +114,7 @@ void ButtonsHandler::processButtonState(Button *button) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-    } else if (_wasPressed && _isOneButtonPressed && !isDoublePressSupported || (isRegisteredPress && isElapsedTime)) {
+    } else if ((_wasPressed && _isOneButtonPressed && !isDoublePressSupported) || (isRegisteredPress && isElapsedTime)) {
         onPress(button);
     } else if (_wasPressed && _isOneButtonPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
@@ -158,7 +158,6 @@ void ButtonsHandler::onDoublePress(Button *button) {
     simultaneousButtons.clear();
     buttonLastStartPressed[button] = 0;
     buttonLastClicked[button] = 0;
-    return;
 }
 
 void ButtonsHandler::onPress(Button *button) {
