@@ -4,8 +4,15 @@ This debounce button library is designed to handle the common issue of switch bo
 
 There are already few libraries in PlatformIO, but none of them were perfect, or even work properly. I think this library is outstanding for its simplicity and efficiency.
 
-Below is simple example how to use it. Notice that for only two hypothetical buttons, you can define as much as 6 behaviors (pressedA, pressedB, pressedLongA, pressedLongB, combinationAB, combinationLongAB) and for 3 buttons you can define up to 14 behaviors!!!
-Use `pollOnce()` - to call only once in setup, or `poll()` - to call constantly inside a loop.
+## Features
+- debounce buttons
+- short click
+- long click
+- double click
+- simultaneous click
+
+Below is simple example how to use it.
+Use `pollOnce()` - to call only once in a setup, or `poll()` - to call constantly inside a loop.
 
 ```c++
 #include <Arduino.h>
