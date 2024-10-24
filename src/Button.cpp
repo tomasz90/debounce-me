@@ -14,6 +14,11 @@ Button::Button(byte buttonPin,
     state.lastChangeTime = 0;
 }
 
+Button::Button(byte buttonPinA, byte buttonPinB, Mode buttonAMode) : Button(buttonPinA, buttonAMode) {
+    pinMode(buttonPinB, OUTPUT);
+    digitalWrite(buttonPinB, buttonAMode == IN_PULLUP ? LOW : HIGH);
+}
+
 void Button::setClick(std::function<void()> behavior) {
     this->onPress = std::move(behavior);
 }

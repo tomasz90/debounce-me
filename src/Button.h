@@ -33,6 +33,9 @@ struct Button {
 
     Button(byte buttonPin, Mode buttonMode);
 
+    // support for buttons with two pins instead pin and ground/3.3V
+    Button(byte buttonPinA, byte buttonPinB, Mode buttonMode);
+
     void setClick(std::function<void()> behavior);
 
     void setClickLong(std::function<void()> behavior,
