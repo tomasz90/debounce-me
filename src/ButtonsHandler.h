@@ -8,6 +8,12 @@
 #ifndef BUTTON_HANDLER_H
 #define BUTTON_HANDLER_H
 
+#if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
+#define IS_FREE_RTOS_SUPPORTED 1
+#else
+#define IS_FREE_RTOS_SUPPORTED 0
+#endif
+
 class ButtonsHandler {
 public:
     ButtonsHandler(std::initializer_list<Button*> buttons);
@@ -17,7 +23,11 @@ public:
     void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
     void poll();
+
+#if IS_FREE_RTOS_SUPPORTED
     void pollOnce(int pollInterval = 1);
+#endif
+
     void stopPolling();
 
 private:
@@ -35,7 +45,9 @@ private:
     std::map<Button*, unsigned long> buttonLastClicked;
     std::map<Button*, bool> buttonWasLongPressed;
 
+#if IS_FREE_RTOS_SUPPORTED
     TimerHandle_t timer;
+#endif
 
     void pollState(Button *button) const;
     void resetState(Button *button) const;

@@ -58,10 +58,10 @@ bool ButtonsHandler::isLongPressed(Button *button) const {
 }
 
 bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
+    if (isOneButtonPressed()) return false;
     if (!simultaneousLongPressTimes[simultaneousButtons]) return false;
     auto lastStartPressed = buttonLastStartPressed.at(button);
-    auto matchTime = millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtons];
-    return matchTime && !isOneButtonPressed();
+    return millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtons];
 }
 
 bool &ButtonsHandler::wasLongPressed(Button *button) {
@@ -73,11 +73,7 @@ bool ButtonsHandler::isOneButtonPressed() const {
 }
 
 // this function can be used to poll inside `setup()`
-#if defined(ESP32) || \
-    defined(NRF52840_XXAA) || \
-    defined(RASPBERRY_PI_PICO) || \
-    defined(RASPBERRY_PI_PICO_W) || \
-    defined(USE_POLL_ONCE)
+#if IS_FREE_RTOS_SUPPORTED
 void ButtonsHandler::pollOnce(int pollInterval) {
     auto task = [](TimerHandle_t xTimer) {
         auto _this = static_cast<ButtonsHandler *>(pvTimerGetTimerID(xTimer));
@@ -110,6 +106,7 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isRegisteredPress = buttonLastClicked[button] != 0;
     bool isElapsedTime = millis() - buttonLastClicked[button] > button->doublePressTime;
 
+    //TODO: measure how long it takes on ESP32
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
