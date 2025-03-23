@@ -1,11 +1,10 @@
 #include "Button.h"
+#include "Arduino.h"
 
 Button::Button(byte buttonPin,
                Mode buttonMode) :
         pin(buttonPin),
         mode(buttonMode) {
-
-    pinMode(pin, mode);
     invertedState = mode == IN_PULLUP;
 
     state.lastRawState = RELEASED;
@@ -15,23 +14,35 @@ Button::Button(byte buttonPin,
 }
 
 Button::Button(byte buttonPinA, byte buttonPinB, Mode buttonAMode) : Button(buttonPinA, buttonAMode) {
-    pinMode(buttonPinB, OUTPUT);
-    digitalWrite(buttonPinB, buttonAMode == IN_PULLUP ? LOW : HIGH);
+    pinSecond = buttonPinB;
+}
+
+void Button::initialize() {
+    if (initialized) return;
+    initialized = true;
+    pinMode(pin, mode);
+    if (pinSecond == -1) return;
+    auto pinSecondState = mode == IN_PULLUP ? LOW : HIGH;
+    pinMode(pinSecond, OUTPUT);
+    digitalWrite(pinSecond, pinSecondState);
 }
 
 void Button::setClick(std::function<void()> behavior) {
+    initialize();
     this->onPress = std::move(behavior);
 }
 
 void Button::setClickLong(std::function<void()> behavior,
                           unsigned int _longPressTime,
                           bool _isMultipleLongPressSupported) {
+    initialize();
     this->onPressLong = std::move(behavior);
     this->longPressTime = _longPressTime;
     this->isMultipleLongPressSupported = _isMultipleLongPressSupported;
 }
 
 void Button::setClickDouble(std::function<void()> behavior, unsigned int _doublePressTime) {
+    initialize();
     this->onPressDouble = std::move(behavior);
     this->doublePressTime = _doublePressTime;
 }

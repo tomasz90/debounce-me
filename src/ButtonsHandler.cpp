@@ -83,7 +83,7 @@ void ButtonsHandler::pollOnce(int pollInterval) {
     xTimerStart(timer, 0);
 }
 
-void ButtonsHandler::stopPolling() {
+void ButtonsHandler::pollStop() {
     if (timer == nullptr) return;
     xTimerStop(timer, 0);
     xTimerDelete(timer, 0);
@@ -111,7 +111,8 @@ void ButtonsHandler::processButtonState(Button *button) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-    } else if ((_wasPressed && _isOneButtonPressed && !isDoublePressSupported) || (isRegisteredPress && isElapsedTime)) {
+    } else if ((_wasPressed && _isOneButtonPressed && !isDoublePressSupported) ||
+               (isRegisteredPress && isElapsedTime)) {
         onPress(button);
     } else if (_wasPressed && _isOneButtonPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);

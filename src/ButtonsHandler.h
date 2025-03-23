@@ -26,9 +26,9 @@ public:
 
 #if IS_FREE_RTOS_SUPPORTED
     void pollOnce(int pollInterval = 1);
-#endif
 
-    void stopPolling();
+    void pollStop();
+#endif
 
 private:
     std::vector<Button*> buttons;

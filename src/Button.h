@@ -14,11 +14,14 @@ enum Mode {
 
 struct Button {
     byte pin;
+    int8_t pinSecond = -1; // 2 pins instead pin and ground/3.3V
+
     Mode mode;
     bool invertedState;
     bool isMultipleLongPressSupported;
     unsigned int longPressTime;
     unsigned int doublePressTime;
+    bool initialized = false;
 
     std::function<void()> onPress;
     std::function<void()> onPressLong;
@@ -47,6 +50,9 @@ struct Button {
     bool operator<(const Button &other) const;
 
     bool operator==(const Button &other) const;
+
+private:
+    void initialize();
 };
 
 
