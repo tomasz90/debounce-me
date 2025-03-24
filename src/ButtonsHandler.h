@@ -36,10 +36,11 @@ private:
 
     std::vector<Button*> buttons;
 
-    std::set<Button*> simultaneousButtons;
+    std::set<Button*> simultaneousButtonsTemporary;
+
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
-    std::map<std::set<Button*>, int> simultaneousLongPressTimes;
+    std::map<std::set<Button*>, unsigned int> simultaneousLongPressTimes;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, unsigned long> buttonLastClicked;
