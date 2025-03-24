@@ -14,11 +14,20 @@
 #define SIMULTANEOUS_PRESS_TIME 200
 #define SIMULTANEOUS_LONG_PRESS_DELAY (SIMULTANEOUS_PRESS_TIME * 1.1)
 
+#if !LEGACY
 Button *buttonA = new Button(BUTTON_PIN_A, IN_PULLUP);
 Button *buttonB = new Button(BUTTON_PIN_B, IN_PULLUP);
 Button *buttonC = new Button(BUTTON_PIN_C, IN_PULLUP);
 
 ButtonsHandler buttonsHandler({buttonA, buttonB, buttonC});
+#else
+Button buttonA(BUTTON_PIN_A, IN_PULLUP);
+Button buttonB(BUTTON_PIN_B, IN_PULLUP);
+Button buttonC(BUTTON_PIN_C, IN_PULLUP);
+
+Button *buttons[] = {&buttonA, &buttonB, &buttonC};
+ButtonsHandler buttonsHandler(buttons, sizeof(buttons) / sizeof(buttons[0]));
+#endif
 
 // TO RUN TESTS: `pio test -vvv`
 void setUp(void) {
@@ -307,6 +316,7 @@ void setup() {
     pinMode(BUTTON_PIN_B, OUTPUT);
     pinMode(BUTTON_PIN_C, OUTPUT);
 
+#if !LEGACY
     buttonsHandler.setClickSimultaneous({buttonA, buttonB}, simultaneousPressAB);
     buttonsHandler.setClickSimultaneousLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
@@ -316,9 +326,24 @@ void setup() {
     buttonsHandler.setClickSimultaneousLong({buttonB, buttonC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
     buttonsHandler.setClickSimultaneous({buttonA, buttonB, buttonC}, simultaneousPressABC);
     buttonsHandler.setClickSimultaneousLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
-                                               SIMULTANEOUS_PRESS_TIME);
+                                            SIMULTANEOUS_PRESS_TIME);
 
     buttonsHandler.pollOnce();
+#else
+    Button *buttonsAB[] = {&buttonA, &buttonB};
+    Button *buttonsAC[] = {&buttonA, &buttonB};
+    Button *buttonsBC[] = {&buttonB, &buttonC};
+
+    buttonsHandler.setClickSimultaneous(buttonsAB, 2, simultaneousPressAB);
+    buttonsHandler.setClickSimultaneousLong(buttonsAB, 2, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
+    // Lets assume this combination is missing:
+    // buttonsHandler.setClickSimultaneous({buttonA, buttonC}, simultaneousPressAC);
+    buttonsHandler.setClickSimultaneousLong(buttonsAC, 2, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous(buttonsBC, 2, simultaneousPressBC);
+    buttonsHandler.setClickSimultaneousLong(buttonsBC, 2, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous(buttons, 3, simultaneousPressABC);
+    buttonsHandler.setClickSimultaneousLong(buttons, 3, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
+#endif
 
     UNITY_BEGIN();
 
