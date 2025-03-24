@@ -106,7 +106,6 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isRegisteredPress = buttonLastClicked[button] != 0;
     bool isElapsedTime = millis() - buttonLastClicked[button] > button->doublePressTime;
 
-    //TODO: measure how long it takes on ESP32
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {

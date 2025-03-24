@@ -1,12 +1,12 @@
+#ifndef BUTTON_HANDLER_H
+#define BUTTON_HANDLER_H
+
 #include <Arduino.h>
+#include "Button.h"
 #include <vector>
 #include <map>
 #include <set>
 #include <algorithm>
-#include "Button.h"
-
-#ifndef BUTTON_HANDLER_H
-#define BUTTON_HANDLER_H
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
 #define IS_FREE_RTOS_SUPPORTED 1
@@ -18,9 +18,9 @@ class ButtonsHandler {
 public:
     ButtonsHandler(std::initializer_list<Button*> buttons);
 
-    void setDebounceTime(unsigned int time);
     void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
     void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
+    void setDebounceTime(unsigned int time);
 
     void poll();
 
@@ -31,15 +31,15 @@ public:
 #endif
 
 private:
+    unsigned int debounceTime = 20;
+    bool wasSimultaneousPress = false;
+
     std::vector<Button*> buttons;
 
     std::set<Button*> simultaneousButtons;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
     std::map<std::set<Button*>, int> simultaneousLongPressTimes;
-
-    bool wasSimultaneousPress = false;
-    unsigned int debounceTime = 20;
 
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, unsigned long> buttonLastClicked;
