@@ -41,8 +41,13 @@ public:
 #endif
 
 private:
+#if !LEGACY
     std::vector<Button*> buttons;
-
+#else
+    static const uint8_t MAX_BUTTONS = 10;
+    Button *buttons[MAX_BUTTONS]; // Fixed-size array
+    uint8_t numButtons;
+#endif
     std::set<Button*> simultaneousButtons;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
