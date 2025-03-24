@@ -1,11 +1,20 @@
 #include "ButtonsHandler.h"
 
+#if !LEGACY
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
     std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
         buttonLastStartPressed[button] = 0;
         buttonWasLongPressed[button] = false;
     });
 }
+#else
+ButtonsHandler::ButtonsHandler(Button **buttons, uint8_t numButtons) : buttons(buttons) {
+    for (uint8_t i = 0; i < numButtons; i++) {
+        buttonLastStartPressed[buttons[i]] = 0;
+        buttonWasLongPressed[buttons[i]] = false;
+    }
+}
+#endif
 
 void ButtonsHandler::setDebounceTime(unsigned int time) {
     debounceTime = time;

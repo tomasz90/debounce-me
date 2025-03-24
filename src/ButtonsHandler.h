@@ -1,12 +1,18 @@
+#ifndef BUTTON_HANDLER_H
+#define BUTTON_HANDLER_H
+
 #include <Arduino.h>
+#include "Button.h"
+
+#if defined(USE_LEGACY)
+#define LEGACY 1
+#else
+#define LEGACY 0
 #include <vector>
 #include <map>
 #include <set>
 #include <algorithm>
-#include "Button.h"
-
-#ifndef BUTTON_HANDLER_H
-#define BUTTON_HANDLER_H
+#endif
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
 #define IS_FREE_RTOS_SUPPORTED 1
@@ -16,7 +22,11 @@
 
 class ButtonsHandler {
 public:
+#if !LEGACY
     ButtonsHandler(std::initializer_list<Button*> buttons);
+#else
+    ButtonsHandler(Button **buttons, uint8_t numButtons);
+#endif
 
     void setDebounceTime(unsigned int time);
     void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);

@@ -2,14 +2,24 @@
 #define BUTTON_H
 
 #include <Arduino.h>
+
+#if defined(USE_LEGACY)
+#define LEGACY 1
+#else
+#define LEGACY 0
 #include <functional>
+#endif
 
 #define RELEASED 0
 #define PRESSED 1
 
 enum Mode {
     IN_PULLUP = INPUT_PULLUP,
+#if !LEGACY
     IN_PULLDOWN = INPUT_PULLDOWN,
+#else
+    IN_PULLDOWN = INPUT,
+#endif
 };
 
 struct Button {
@@ -23,9 +33,15 @@ struct Button {
     unsigned int doublePressTime;
     bool initialized = false;
 
+#if !LEGACY
     std::function<void()> onPress;
     std::function<void()> onPressLong;
     std::function<void()> onPressDouble;
+#else
+    void (*onPress)() = nullptr;
+    void (*onPressLong)() = nullptr;
+    void (*onPressDouble)() = nullptr;
+#endif
 
     struct {
         bool lastRawState;
@@ -39,6 +55,7 @@ struct Button {
     // support for buttons with two pins instead pin and ground/3.3V
     Button(byte buttonPinA, byte buttonPinB, Mode buttonMode);
 
+#if !LEGACY
     void setClick(std::function<void()> behavior);
 
     void setClickLong(std::function<void()> behavior,
@@ -46,6 +63,15 @@ struct Button {
                       bool _isMultipleLongPressSupported = false);
 
     void setClickDouble(std::function<void()> behavior, unsigned int _doublePressTime = 250);
+#else
+    void setClick(void (*behavior)());
+
+    void setClickLong(void (*behavior)(),
+                      unsigned int _longPressTime = 1000,
+                      bool _isMultipleLongPressSupported = false);
+
+    void setClickDouble(void (*behavior)(), unsigned int _doublePressTime = 250);
+#endif
 
     bool operator<(const Button &other) const;
 

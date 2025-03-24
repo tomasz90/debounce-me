@@ -27,6 +27,7 @@ void Button::initialize() {
     digitalWrite(pinSecond, pinSecondState);
 }
 
+#if !LEGACY
 void Button::setClick(std::function<void()> behavior) {
     initialize();
     this->onPress = std::move(behavior);
@@ -46,6 +47,27 @@ void Button::setClickDouble(std::function<void()> behavior, unsigned int _double
     this->onPressDouble = std::move(behavior);
     this->doublePressTime = _doublePressTime;
 }
+#else
+void Button::setClick(void (*behavior)()) {
+    initialize();
+    this->onPress = behavior;
+}
+
+void Button::setClickLong(void (*behavior)(),
+                          unsigned int _longPressTime,
+                          bool _isMultipleLongPressSupported) {
+    initialize();
+    this->onPressLong = behavior;
+    this->longPressTime = _longPressTime;
+    this->isMultipleLongPressSupported = _isMultipleLongPressSupported;
+}
+
+void Button::setClickDouble(void (*behavior)(), unsigned int _doublePressTime) {
+    initialize();
+    this->onPressDouble = behavior;
+    this->doublePressTime = _doublePressTime;
+}
+#endif
 
 bool Button::operator<(const Button &other) const {
     return false;
