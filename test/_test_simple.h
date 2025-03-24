@@ -3,10 +3,9 @@
 
 void testOnPress() {
     pushButton(btnA);
-    delay(SMALL_DELAY);
+    delay(SHORT_PRESS_DELAY);
 
     releaseButton(btnA);
-    delay(DOUBLE_PRESS_TIME + SMALL_DELAY);
 
     assertAllEqual0Except(pressA);
 }
@@ -16,7 +15,6 @@ void testOnPressLong() {
     delay(LONG_PRESS_DELAY);
 
     releaseButton(btnA);
-    delay(SMALL_DELAY);
 
     assertAllEqual0Except(longPressA);
 }
@@ -32,7 +30,6 @@ void testOnPressDouble() {
     delay(SMALL_DELAY);
 
     releaseButton(btnA);
-    delay(SMALL_DELAY);
 
     assertAllEqual0Except(doublePressA);
 }
@@ -48,7 +45,6 @@ void testOnPressDouble2() {
     delay(SMALL_DELAY);
 
     releaseButton(btnA);
-    delay(SMALL_DELAY);
 
     assertAllEqual0Except(doublePressA);
     resetActions();
@@ -56,7 +52,6 @@ void testOnPressDouble2() {
     pushButton(btnA);
     delay(SMALL_DELAY);
     releaseButton(btnA);
-    delay(DOUBLE_PRESS_TIME + SMALL_DELAY);
 
     assertAllEqual0Except(pressA);
 }
@@ -66,7 +61,6 @@ void testOnPressLongMultiple() {
     delay(3 * LONG_PRESS_DELAY);
 
     releaseButton(btnA);
-    delay(SMALL_DELAY);
 
     assertAllEqual0Except(longPressA, 3);
 }

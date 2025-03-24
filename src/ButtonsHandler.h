@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <algorithm>
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
 #define IS_FREE_RTOS_SUPPORTED 1

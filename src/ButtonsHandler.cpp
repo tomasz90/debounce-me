@@ -1,10 +1,10 @@
 #include "ButtonsHandler.h"
 
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
-    std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
+    for (auto &button: buttons) {
         buttonTemporary[button].buttonLastStartPressed = 0;
         buttonTemporary[button].buttonWasLongPressed = false;
-    });
+    }
 }
 
 void ButtonsHandler::setDebounceTime(unsigned int time) {

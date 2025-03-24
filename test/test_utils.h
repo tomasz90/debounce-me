@@ -7,6 +7,7 @@
 #include "Button.h"
 #include <map>
 #include <functional>
+#include "test_config.h"
 
 std::map<void (*)(), int> mapOfActions;
 
@@ -87,6 +88,7 @@ void releaseButton(Button *button) {
 }
 
 void assertAllEqual0Except(void (*action)(), int times = 1) {
+    delay(DELAY_BETWEEN_TESTS);
     for (auto &pair: mapOfActions) {
         if (pair.first != action) {
             if (0 != pair.second) {
