@@ -101,13 +101,14 @@ private:
 
     void processButtonState(Button *button);
 
-    void onSimultaneousPressLong();
-    void onPressLong(Button *button);
-    void onSimultaneousPress(Button *button);
     void onPress(Button *button);
+    void onPressLong(Button *button);
     void onDoublePress(Button *button);
-    void registerPress(Button *button);
+    void onSimultaneousPress();
+    void onSimultaneousPressLong();
     void onWasReleased(Button *button);
+
+    void registerPress(Button *button);
 
 #if LEGACY
     uint8_t getButtonIndex(Button* button) const;
