@@ -4,110 +4,73 @@
 #include <unity.h>
 #include "Button.h"
 #include <map>
+#include <functional>
 
-enum Action {
-    NONE,
-    PRESS_A,
-    LONG_PRESS_A,
-    DOUBLE_PRESS_A,
-    PRESS_B,
-    LONG_PRESS_B,
-    DOUBLE_PRESS_B,
-    PRESS_C,
-    LONG_PRESS_C,
-    DOUBLE_PRESS_C,
-    SIMULTANEOUS_PRESS_A_B,
-    SIMULTANEOUS_LONG_PRESS_A_B,
-    SIMULTANEOUS_PRESS_A_C,
-    SIMULTANEOUS_LONG_PRESS_A_C,
-    SIMULTANEOUS_PRESS_B_C,
-    SIMULTANEOUS_LONG_PRESS_B_C,
-    SIMULTANEOUS_PRESS_A_B_C,
-    SIMULTANEOUS_LONG_PRESS_A_B_C
-};
+std::map<void (*)(), int> mapOfActions;
 
-const char *getActionName(Action action) {
-    std::map<Action, std::string> actionNames = {
-            {NONE,                          "NONE"},
-            {PRESS_A,                       "PRESS_A"},
-            {LONG_PRESS_A,                  "LONG_PRESS_A"},
-            {DOUBLE_PRESS_A,                "DOUBLE_PRESS_A"},
-            {PRESS_B,                       "PRESS_B"},
-            {LONG_PRESS_B,                  "LONG_PRESS_B"},
-            {DOUBLE_PRESS_B,                "DOUBLE_PRESS_B"},
-            {PRESS_C,                       "PRESS_C"},
-            {LONG_PRESS_C,                  "LONG_PRESS_C"},
-            {DOUBLE_PRESS_C,                "DOUBLE_PRESS_C"},
-            {SIMULTANEOUS_PRESS_A_B,        "SIMULTANEOUS_PRESS_A_B"},
-            {SIMULTANEOUS_LONG_PRESS_A_B,   "SIMULTANEOUS_LONG_PRESS_A_B"},
-            {SIMULTANEOUS_PRESS_A_C,        "SIMULTANEOUS_PRESS_A_C"},
-            {SIMULTANEOUS_LONG_PRESS_A_C,   "SIMULTANEOUS_LONG_PRESS_A_C"},
-            {SIMULTANEOUS_PRESS_B_C,        "SIMULTANEOUS_PRESS_B_C"},
-            {SIMULTANEOUS_LONG_PRESS_B_C,   "SIMULTANEOUS_LONG_PRESS_B_C"},
-            {SIMULTANEOUS_PRESS_A_B_C,      "SIMULTANEOUS_PRESS_A_B_C"},
-            {SIMULTANEOUS_LONG_PRESS_A_B_C, "SIMULTANEOUS_LONG_PRESS_A_B_C"}
+void none() {} // do nothing
+void pressA() { mapOfActions[pressA]++; }
+void longPressA() { mapOfActions[longPressA]++; }
+void doublePressA() { mapOfActions[doublePressA]++; }
+void pressB() { mapOfActions[pressB]++; }
+void longPressB() { mapOfActions[longPressB]++; }
+void doublePressB() { mapOfActions[doublePressB]++; }
+void pressC() { mapOfActions[pressC]++; }
+void longPressC() { mapOfActions[longPressC]++; }
+void doublePressC() { mapOfActions[doublePressC]++; }
+void simultaneousPressAB() { mapOfActions[simultaneousPressAB]++; }
+void simultaneousLongPressAB() { mapOfActions[simultaneousLongPressAB]++; }
+void simultaneousPressAC() { mapOfActions[simultaneousPressAC]++; }
+void simultaneousLongPressAC() { mapOfActions[simultaneousLongPressAC]++; }
+void simultaneousPressBC() { mapOfActions[simultaneousPressBC]++; }
+void simultaneousLongPressBC() { mapOfActions[simultaneousLongPressBC]++; }
+void simultaneousPressABC() { mapOfActions[simultaneousPressABC]++; }
+void simultaneousLongPressABC() { mapOfActions[simultaneousLongPressABC]++; }
+
+const char *getActionName(void (*action)()) {
+    std::map<void (*)(), std::string> actionNames = {
+            {none,                          "NONE"},
+            {pressA,                       "PRESS_A"},
+            {longPressA,                  "LONG_PRESS_A"},
+            {doublePressA,                "DOUBLE_PRESS_A"},
+            {pressB,                       "PRESS_B"},
+            {longPressB,                  "LONG_PRESS_B"},
+            {doublePressB,                "DOUBLE_PRESS_B"},
+            {pressC,                       "PRESS_C"},
+            {longPressC,                  "LONG_PRESS_C"},
+            {doublePressC,                "DOUBLE_PRESS_C"},
+            {simultaneousPressAB,        "SIMULTANEOUS_PRESS_A_B"},
+            {simultaneousLongPressAB,   "SIMULTANEOUS_LONG_PRESS_A_B"},
+            {simultaneousPressAC,        "SIMULTANEOUS_PRESS_A_C"},
+            {simultaneousLongPressAC,   "SIMULTANEOUS_LONG_PRESS_A_C"},
+            {simultaneousPressBC,        "SIMULTANEOUS_PRESS_B_C"},
+            {simultaneousLongPressBC,   "SIMULTANEOUS_LONG_PRESS_B_C"},
+            {simultaneousPressABC,      "SIMULTANEOUS_PRESS_A_B_C"},
+            {simultaneousLongPressABC, "SIMULTANEOUS_LONG_PRESS_A_B_C"}
     };
 
     return actionNames[action].c_str();
 }
 
-std::map<Action, int> mapOfActions;
-
-void none() {} // do nothing
-
-void pressA() { mapOfActions[PRESS_A]++; }
-
-void longPressA() { mapOfActions[LONG_PRESS_A]++; }
-
-void doublePressA() { mapOfActions[DOUBLE_PRESS_A]++; }
-
-void pressB() { mapOfActions[PRESS_B]++; }
-
-void longPressB() { mapOfActions[LONG_PRESS_B]++; }
-
-void doublePressB() { mapOfActions[DOUBLE_PRESS_B]++; }
-
-void pressC() { mapOfActions[PRESS_C]++; }
-
-void longPressC() { mapOfActions[LONG_PRESS_C]++; }
-
-void doublePressC() { mapOfActions[DOUBLE_PRESS_C]++; }
-
-void simultaneousPressAB() { mapOfActions[SIMULTANEOUS_PRESS_A_B]++; }
-
-void simultaneousLongPressAB() { mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B]++; }
-
-void simultaneousPressAC() { mapOfActions[SIMULTANEOUS_PRESS_A_C]++; }
-
-void simultaneousLongPressAC() { mapOfActions[SIMULTANEOUS_LONG_PRESS_A_C]++; }
-
-void simultaneousPressBC() { mapOfActions[SIMULTANEOUS_PRESS_B_C]++; }
-
-void simultaneousLongPressBC() { mapOfActions[SIMULTANEOUS_LONG_PRESS_B_C]++; }
-
-void simultaneousPressABC() { mapOfActions[SIMULTANEOUS_PRESS_A_B_C]++; }
-
-void simultaneousLongPressABC() { mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C]++; }
-
 void resetActions() {
-    mapOfActions[NONE] = 0;
-    mapOfActions[PRESS_A] = 0;
-    mapOfActions[LONG_PRESS_A] = 0;
-    mapOfActions[DOUBLE_PRESS_A] = 0;
-    mapOfActions[PRESS_B] = 0;
-    mapOfActions[LONG_PRESS_B] = 0;
-    mapOfActions[DOUBLE_PRESS_B] = 0;
-    mapOfActions[PRESS_C] = 0;
-    mapOfActions[LONG_PRESS_C] = 0;
-    mapOfActions[DOUBLE_PRESS_C] = 0;
-    mapOfActions[SIMULTANEOUS_PRESS_A_B] = 0;
-    mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B] = 0;
-    mapOfActions[SIMULTANEOUS_PRESS_A_C] = 0;
-    mapOfActions[SIMULTANEOUS_LONG_PRESS_A_C] = 0;
-    mapOfActions[SIMULTANEOUS_PRESS_B_C] = 0;
-    mapOfActions[SIMULTANEOUS_LONG_PRESS_B_C] = 0;
-    mapOfActions[SIMULTANEOUS_PRESS_A_B_C] = 0;
-    mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C] = 0;
+    mapOfActions[none] = 0;
+    mapOfActions[pressA] = 0;
+    mapOfActions[longPressA] = 0;
+    mapOfActions[doublePressA] = 0;
+    mapOfActions[pressB] = 0;
+    mapOfActions[longPressB] = 0;
+    mapOfActions[doublePressB] = 0;
+    mapOfActions[pressC] = 0;
+    mapOfActions[longPressC] = 0;
+    mapOfActions[doublePressC] = 0;
+    mapOfActions[simultaneousPressAB] = 0;
+    mapOfActions[simultaneousLongPressAB] = 0;
+    mapOfActions[simultaneousPressAC] = 0;
+    mapOfActions[simultaneousLongPressAC] = 0;
+    mapOfActions[simultaneousPressBC] = 0;
+    mapOfActions[simultaneousLongPressBC] = 0;
+    mapOfActions[simultaneousPressABC] = 0;
+    mapOfActions[simultaneousLongPressABC] = 0;
 }
 
 void pushButton(Button *button) {
@@ -118,7 +81,7 @@ void releaseButton(Button *button) {
     digitalWrite(button->pin, HIGH);
 }
 
-void assertAllEqual0Except(Action action, int times = 1) {
+void assertAllEqual0Except(void (*action)(), int times = 1) {
     for (auto &pair: mapOfActions) {
         if (pair.first != action) {
             if (0 != pair.second) {
@@ -142,12 +105,8 @@ void assertAllEqual0Except(Action action, int times = 1) {
     TEST_ASSERT_EQUAL(times, mapOfActions[action]);
 }
 
-void assertAllEqual0() {
-    assertAllEqual0Except(NONE, 0);
-}
+void assertAllEqual0() { assertAllEqual0Except(none, 0); }
 
-void loop() {
-    // Required by Arduino
-}
+void loop() { } /* Required by Arduino */
 
 #endif //DEBOUNCE_ME_TESTUTILS_H
