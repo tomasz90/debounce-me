@@ -31,24 +31,24 @@ void simultaneousLongPressABC() { mapOfActions[simultaneousLongPressABC]++; }
 
 const char *getActionName(void (*action)()) {
     std::map<void (*)(), std::string> actionNames = {
-            {none,                          "NONE"},
-            {pressA,                       "PRESS_A"},
-            {longPressA,                  "LONG_PRESS_A"},
-            {doublePressA,                "DOUBLE_PRESS_A"},
-            {pressB,                       "PRESS_B"},
-            {longPressB,                  "LONG_PRESS_B"},
-            {doublePressB,                "DOUBLE_PRESS_B"},
-            {pressC,                       "PRESS_C"},
-            {longPressC,                  "LONG_PRESS_C"},
-            {doublePressC,                "DOUBLE_PRESS_C"},
-            {simultaneousPressAB,        "SIMULTANEOUS_PRESS_A_B"},
-            {simultaneousLongPressAB,   "SIMULTANEOUS_LONG_PRESS_A_B"},
-            {simultaneousPressAC,        "SIMULTANEOUS_PRESS_A_C"},
-            {simultaneousLongPressAC,   "SIMULTANEOUS_LONG_PRESS_A_C"},
-            {simultaneousPressBC,        "SIMULTANEOUS_PRESS_B_C"},
-            {simultaneousLongPressBC,   "SIMULTANEOUS_LONG_PRESS_B_C"},
-            {simultaneousPressABC,      "SIMULTANEOUS_PRESS_A_B_C"},
-            {simultaneousLongPressABC, "SIMULTANEOUS_LONG_PRESS_A_B_C"}
+            {none,                          "none"},
+            {pressA,                       "pressA"},
+            {longPressA,                  "longPressA"},
+            {doublePressA,                "doublePressA"},
+            {pressB,                       "pressB"},
+            {longPressB,                  "longPressB"},
+            {doublePressB,                "doublePressB"},
+            {pressC,                       "pressC"},
+            {longPressC,                  "longPressC"},
+            {doublePressC,                "doublePressC"},
+            {simultaneousPressAB,        "simultaneousPressAB"},
+            {simultaneousLongPressAB,   "simultaneousLongPressAB"},
+            {simultaneousPressAC,        "simultaneousPressAC"},
+            {simultaneousLongPressAC,   "simultaneousLongPressAC"},
+            {simultaneousPressBC,        "simultaneousPressBC"},
+            {simultaneousLongPressBC,   "simultaneousLongPressBC"},
+            {simultaneousPressABC,      "simultaneousPressABC"},
+            {simultaneousLongPressABC, "simultaneousLongPressABC"}
     };
 
     return actionNames[action].c_str();

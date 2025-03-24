@@ -7,6 +7,7 @@
 #define BUTTON_PIN_A 2
 #define BUTTON_PIN_B 21
 #define BUTTON_PIN_C 22
+#define BUTTON_PIN_D 23
 
 #define SMALL_DELAY 20
 #define LONG_PRESS_TIME 100
@@ -18,6 +19,7 @@
 extern Button *btnA;
 extern Button *btnB;
 extern Button *btnC;
+extern Button *btnD;
 
 extern ButtonsHandler btnHlr;
 #endif //DEBOUNCE_ME_TEST_CONFIG_H

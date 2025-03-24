@@ -4,8 +4,9 @@
 Button *btnA = new Button(BUTTON_PIN_A, IN_PULLUP);
 Button *btnB = new Button(BUTTON_PIN_B, IN_PULLUP);
 Button *btnC = new Button(BUTTON_PIN_C, IN_PULLUP);
+Button *btnD = new Button(BUTTON_PIN_D, IN_PULLUP);
 
-ButtonsHandler btnHlr({btnA, btnB, btnC});
+ButtonsHandler btnHlr({btnA, btnB, btnC, btnD});
 
 void setup() {
     Serial.begin(115200);
@@ -13,6 +14,7 @@ void setup() {
     btnA->setClick(pressA);
     btnB->setClick(pressB);
     btnC->setClick(pressC);
+    btnD->setClick([]{});
 
     btnA->setClickLong(longPressA, LONG_PRESS_TIME, true);
     btnB->setClickLong(longPressB, LONG_PRESS_TIME, true);
@@ -64,6 +66,7 @@ void setUp() {
     releaseButton(btnA);
     releaseButton(btnB);
     releaseButton(btnC);
+    releaseButton(btnD);
 }
 
 void tearDown() { /* This function is run after EACH TEST */ }

@@ -59,11 +59,14 @@ void testOnPressSimultaneousLong2() {
     pushButton(btnA);
     pushButton(btnB);
     pushButton(btnC);
+    pushButton(btnD);
     delay(SIMULTANEOUS_LONG_PRESS_DELAY);
 
     releaseButton(btnA);
     releaseButton(btnB);
     releaseButton(btnC);
+    releaseButton(btnD);
+
     delay(SMALL_DELAY);
 
     assertAllEqual0Except(simultaneousLongPressABC);
