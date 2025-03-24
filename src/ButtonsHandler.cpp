@@ -134,11 +134,11 @@ bool ButtonsHandler::isLongPressed(Button *button) const {
     auto lastStartPressed = buttonLastStartPressed[idx];
 #endif
     auto matchTime = millis() - lastStartPressed >= button->longPressTime && lastStartPressed != 0;
-    return matchTime && isOneButtonPressed();
+    return matchTime && !areMultipleButtonsPressed();
 }
 
 bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
-    if (isOneButtonPressed()) return false;
+    if (!areMultipleButtonsPressed()) return false;
 
 #if !LEGACY
     if (!simultaneousLongPressTimes[simultaneousButtons]) return false;
@@ -164,16 +164,16 @@ bool &ButtonsHandler::wasLongPressed(Button *button) {
 #endif
 }
 
-bool ButtonsHandler::isOneButtonPressed() const {
+bool ButtonsHandler::areMultipleButtonsPressed() const {
 #if !LEGACY
-    return simultaneousButtons.size() < 2;  // this is required to be able to run multiple OnPressLong
+    return simultaneousButtons.size() >= 2;  // this is required to be able to run multiple OnPressLong
 #else
     uint8_t pressedCount = 0;
     for (uint8_t i = 0; i < numButtons; i++) {
         if (isPressed(buttons[i])) pressedCount++;
-        if (pressedCount > 1) return false;
+        if (pressedCount >= 2) return true;
     }
-    return true;
+    return false;
 #endif
 }
 
@@ -218,7 +218,7 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool _wasPressed = wasPressed(button) && !wasSimultaneousPress && !isLongPress && !buttonWasLongPressed[idx];
 #endif
 
-    bool _isOneButtonPressed = isOneButtonPressed();
+    bool _areMultipleButtonsPressed = areMultipleButtonsPressed();
     bool isDoublePressSupported = button->onPressDouble != nullptr;
 #if !LEGACY
     bool isRegisteredPress = buttonLastClicked[button] != 0;
@@ -232,12 +232,12 @@ void ButtonsHandler::processButtonState(Button *button) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-    } else if ((_wasPressed && _isOneButtonPressed && !isDoublePressSupported) ||
+    } else if ((_wasPressed && !_areMultipleButtonsPressed && !isDoublePressSupported) ||
                (isRegisteredPress && isElapsedTime)) {
         onPress(button);
-    } else if (_wasPressed && _isOneButtonPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
+    } else if (_wasPressed && !_areMultipleButtonsPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
-    } else if (_wasPressed && _isOneButtonPressed && !isRegisteredPress) {
+    } else if (_wasPressed && !_areMultipleButtonsPressed && !isRegisteredPress) {
         registerPress(button);
     } else if (_wasPressed) {
         onSimultaneousPress(button);

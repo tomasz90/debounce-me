@@ -97,7 +97,7 @@ private:
     bool isLongPressed(Button *button) const;
     bool isSimultaneousLongPressed(Button *button);
     bool& wasLongPressed(Button *button);
-    bool isOneButtonPressed() const;
+    bool areMultipleButtonsPressed() const;
 
     void processButtonState(Button *button);
 
