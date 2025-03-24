@@ -18,53 +18,54 @@ void ButtonsHandler::setClickSimultaneousLong(std::set<Button *> _buttons, std::
     simultaneousLongPressTimes[_buttons] = longPressTime;
 }
 #else
+
 // LEGACY (AVR) implementation
 ButtonsHandler::ButtonsHandler(Button **buttons, uint8_t numButtons) : numButtons(numButtons) {
-    for(uint8_t i = 0; i < numButtons; i++) {
+    for (uint8_t i = 0; i < numButtons; i++) {
         this->buttons[i] = buttons[i];
         buttonLastStartPressed[i] = 0;
         buttonWasLongPressed[i] = false;
     }
 }
 
-void ButtonsHandler::setClickSimultaneous(Button** buttons, uint8_t count, void (*behavior)()) {
+void ButtonsHandler::setClickSimultaneous(Button **buttons, uint8_t count, void (*behavior)()) {
     if (numSimultaneous >= MAX_GROUPS) return;
 
-    ButtonGroup& group = simultaneousGroups[numSimultaneous++];
+    ButtonGroup &group = simultaneousGroups[numSimultaneous++];
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
-    memcpy(group.buttons, buttons, sizeof(Button*) * group.count);
+    memcpy(group.buttons, buttons, sizeof(Button *) * group.count);
     group.behavior = behavior;
     group.longPressTime = 0;
 }
 
-void ButtonsHandler::setClickSimultaneousLong(Button** buttons, uint8_t count, void (*behavior)(),
+void ButtonsHandler::setClickSimultaneousLong(Button **buttons, uint8_t count, void (*behavior)(),
                                               unsigned int longPressTime) {
     if (numSimultaneousLong >= MAX_GROUPS) return;
 
-    ButtonGroup& group = simultaneousLongGroups[numSimultaneousLong++];
+    ButtonGroup &group = simultaneousLongGroups[numSimultaneousLong++];
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
-    memcpy(group.buttons, buttons, sizeof(Button*) * group.count);
+    memcpy(group.buttons, buttons, sizeof(Button *) * group.count);
     group.behavior = behavior;
     group.longPressTime = longPressTime;
 }
 
-uint8_t ButtonsHandler::getButtonIndex(Button* button) const {
-    for(uint8_t i = 0; i < numButtons; i++) {
+uint8_t ButtonsHandler::getButtonIndex(Button *button) const {
+    for (uint8_t i = 0; i < numButtons; i++) {
         if (buttons[i] == button) return i;
     }
     return MAX_BUTTONS;
 }
 
-bool ButtonsHandler::checkGroupPressed(const ButtonGroup& group) const {
-    for(uint8_t i = 0; i < group.count; i++) {
+bool ButtonsHandler::checkGroupPressed(const ButtonGroup &group) const {
+    for (uint8_t i = 0; i < group.count; i++) {
         auto button = group.buttons[i];
         if (!isPressed(button)) return false;
     }
     return true;
 }
 
-bool ButtonsHandler::checkGroupLongPressed(const ButtonGroup& group) const {
-    for(uint8_t i = 0; i < group.count; i++) {
+bool ButtonsHandler::checkGroupLongPressed(const ButtonGroup &group) const {
+    for (uint8_t i = 0; i < group.count; i++) {
         const uint8_t idx = getButtonIndex(group.buttons[i]);
         if (idx >= MAX_BUTTONS) return false;
         if (millis() - buttonLastStartPressed[idx] < group.longPressTime) {
@@ -74,10 +75,10 @@ bool ButtonsHandler::checkGroupLongPressed(const ButtonGroup& group) const {
     return true;
 }
 
-bool ButtonsHandler::checkNoOtherPressed(const ButtonGroup& group) const {
-    for(uint8_t i = 0; i < numButtons; i++) {
+bool ButtonsHandler::checkNoOtherPressed(const ButtonGroup &group) const {
+    for (uint8_t i = 0; i < numButtons; i++) {
         bool inGroup = false;
-        for(uint8_t j = 0; j < group.count; j++) {
+        for (uint8_t j = 0; j < group.count; j++) {
             if (buttons[i] == group.buttons[j]) {
                 inGroup = true;
                 break;
@@ -87,6 +88,7 @@ bool ButtonsHandler::checkNoOtherPressed(const ButtonGroup& group) const {
     }
     return true;
 }
+
 #endif
 
 void ButtonsHandler::setDebounceTime(unsigned int time) {
@@ -143,8 +145,8 @@ bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
     auto lastStartPressed = buttonLastStartPressed.at(button);
     return millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtons];
 #else
-    for(uint8_t i = 0; i < numSimultaneousLong; i++) {
-        const ButtonGroup& group = simultaneousLongGroups[i];
+    for (uint8_t i = 0; i < numSimultaneousLong; i++) {
+        const ButtonGroup &group = simultaneousLongGroups[i];
         if (checkGroupPressed(group)) {
             return checkGroupLongPressed(group) && checkNoOtherPressed(group);
         }
@@ -167,7 +169,7 @@ bool ButtonsHandler::isOneButtonPressed() const {
     return simultaneousButtons.size() < 2;  // this is required to be able to run multiple OnPressLong
 #else
     uint8_t pressedCount = 0;
-    for(uint8_t i = 0; i < numButtons; i++) {
+    for (uint8_t i = 0; i < numButtons; i++) {
         if (isPressed(buttons[i])) pressedCount++;
         if (pressedCount > 1) return false;
     }
@@ -250,8 +252,8 @@ void ButtonsHandler::onSimultaneousPressLong() {
     if (behavior) behavior();
     simultaneousButtons.clear();
 #else
-    for(uint8_t i = 0; i < numSimultaneousLong; i++) {
-        ButtonGroup& group = simultaneousLongGroups[i];
+    for (uint8_t i = 0; i < numSimultaneousLong; i++) {
+        ButtonGroup &group = simultaneousLongGroups[i];
         if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
             if (group.behavior) group.behavior();
             break;
@@ -280,8 +282,8 @@ void ButtonsHandler::onSimultaneousPress(Button *button) {
     if (behavior) behavior();
     simultaneousButtons.clear();
 #else
-    for(uint8_t i = 0; i < numSimultaneous; i++) {
-        ButtonGroup& group = simultaneousGroups[i];
+    for (uint8_t i = 0; i < numSimultaneous; i++) {
+        ButtonGroup &group = simultaneousGroups[i];
         if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
             if (group.behavior) group.behavior();
             break;
