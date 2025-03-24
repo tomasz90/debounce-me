@@ -322,8 +322,6 @@ void setup() {
     buttonsHandler.setClickSimultaneous({buttonA, buttonB, buttonC}, simultaneousPressABC);
     buttonsHandler.setClickSimultaneousLong({buttonA, buttonB, buttonC}, simultaneousLongPressABC,
                                             SIMULTANEOUS_PRESS_TIME);
-
-    buttonsHandler.pollOnce();
 #else
     buttonA.setClick(pressA);
     buttonB.setClick(pressB);
@@ -349,6 +347,8 @@ void setup() {
     buttonsHandler.setClickSimultaneous(buttons, 3, simultaneousPressABC);
     buttonsHandler.setClickSimultaneousLong(buttons, 3, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 #endif
+
+    buttonsHandler.pollOnce();
 
     // this is right place, it overwrites previously sets in method setClick...
     pinMode(BUTTON_PIN_A, OUTPUT);

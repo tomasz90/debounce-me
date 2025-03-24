@@ -34,6 +34,7 @@ void ButtonsHandler::setClickSimultaneous(Button** buttons, uint8_t count, void 
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
     memcpy(group.buttons, buttons, sizeof(Button*) * group.count);
     group.behavior = behavior;
+    group.longPressTime = 0;
 }
 
 void ButtonsHandler::setClickSimultaneousLong(Button** buttons, uint8_t count, void (*behavior)(),
@@ -43,7 +44,7 @@ void ButtonsHandler::setClickSimultaneousLong(Button** buttons, uint8_t count, v
     ButtonGroup& group = simultaneousLongGroups[numSimultaneousLong++];
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
     memcpy(group.buttons, buttons, sizeof(Button*) * group.count);
-    group.behaviorLong = behavior;
+    group.behavior = behavior;
     group.longPressTime = longPressTime;
 }
 
@@ -252,7 +253,7 @@ void ButtonsHandler::onSimultaneousPressLong() {
     for(uint8_t i = 0; i < numSimultaneousLong; i++) {
         ButtonGroup& group = simultaneousLongGroups[i];
         if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
-            if (group.behaviorLong) group.behaviorLong();
+            if (group.behavior) group.behavior();
             break;
         }
     }

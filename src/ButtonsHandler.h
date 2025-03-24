@@ -70,7 +70,6 @@ private:
         Button* buttons[MAX_BUTTONS];
         uint8_t count;
         void (*behavior)();
-        void (*behaviorLong)();
         unsigned int longPressTime;
     };
 
