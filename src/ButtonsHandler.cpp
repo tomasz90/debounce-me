@@ -246,21 +246,17 @@ void ButtonsHandler::processButtonState(Button *button) {
     }
 }
 
-void ButtonsHandler::onSimultaneousPressLong() {
+void ButtonsHandler::onPress(Button *button) {
+    button->onPress();
 #if !LEGACY
-    auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
-    if (behavior) behavior();
     simultaneousButtons.clear();
+    buttonLastStartPressed[button] = 0;
+    buttonLastClicked[button] = 0;
 #else
-    for (uint8_t i = 0; i < numSimultaneousLong; i++) {
-        ButtonGroup &group = simultaneousLongGroups[i];
-        if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
-            if (group.behavior) group.behavior();
-            break;
-        }
-    }
+    const uint8_t idx = getButtonIndex(button);
+    buttonLastStartPressed[idx] = 0;
+    buttonLastClicked[idx] = 0;
 #endif
-    wasSimultaneousPress = true;
 }
 
 void ButtonsHandler::onPressLong(Button *button) {
@@ -273,6 +269,19 @@ void ButtonsHandler::onPressLong(Button *button) {
     const uint8_t idx = getButtonIndex(button);
     buttonWasLongPressed[idx] = true;
     buttonLastStartPressed[idx] = button->isMultipleLongPressSupported ? millis() : 0;
+#endif
+}
+
+void ButtonsHandler::onDoublePress(Button *button) {
+    button->onPressDouble();
+#if !LEGACY
+    simultaneousButtons.clear();
+    buttonLastStartPressed[button] = 0;
+    buttonLastClicked[button] = 0;
+#else
+    const uint8_t idx = getButtonIndex(button);
+    buttonLastStartPressed[idx] = 0;
+    buttonLastClicked[idx] = 0;
 #endif
 }
 
@@ -299,40 +308,21 @@ void ButtonsHandler::onSimultaneousPress(Button *button) {
 #endif
 }
 
-// Rest of common event handlers with LEGACY adaptations
-void ButtonsHandler::registerPress(Button *button) {
+void ButtonsHandler::onSimultaneousPressLong() {
 #if !LEGACY
-    buttonLastClicked[button] = millis();
-#else
-    const uint8_t idx = getButtonIndex(button);
-    buttonLastClicked[idx] = millis();
-#endif
-}
-
-void ButtonsHandler::onDoublePress(Button *button) {
-    button->onPressDouble();
-#if !LEGACY
+    auto behavior = simultaneousBehaviorsLong[simultaneousButtons];
+    if (behavior) behavior();
     simultaneousButtons.clear();
-    buttonLastStartPressed[button] = 0;
-    buttonLastClicked[button] = 0;
 #else
-    const uint8_t idx = getButtonIndex(button);
-    buttonLastStartPressed[idx] = 0;
-    buttonLastClicked[idx] = 0;
+    for (uint8_t i = 0; i < numSimultaneousLong; i++) {
+        ButtonGroup &group = simultaneousLongGroups[i];
+        if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
+            if (group.behavior) group.behavior();
+            break;
+        }
+    }
 #endif
-}
-
-void ButtonsHandler::onPress(Button *button) {
-    button->onPress();
-#if !LEGACY
-    simultaneousButtons.clear();
-    buttonLastStartPressed[button] = 0;
-    buttonLastClicked[button] = 0;
-#else
-    const uint8_t idx = getButtonIndex(button);
-    buttonLastStartPressed[idx] = 0;
-    buttonLastClicked[idx] = 0;
-#endif
+    wasSimultaneousPress = true;
 }
 
 void ButtonsHandler::onWasReleased(Button *button) {
@@ -352,6 +342,16 @@ void ButtonsHandler::onWasReleased(Button *button) {
     buttonLastStartPressed[button] = millis();
 #else
     buttonLastStartPressed[idx] = millis();
+#endif
+}
+
+// Rest of common event handlers with LEGACY adaptations
+void ButtonsHandler::registerPress(Button *button) {
+#if !LEGACY
+    buttonLastClicked[button] = millis();
+#else
+    const uint8_t idx = getButtonIndex(button);
+    buttonLastClicked[idx] = millis();
 #endif
 }
 

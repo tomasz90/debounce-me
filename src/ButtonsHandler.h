@@ -104,7 +104,7 @@ private:
     void onPress(Button *button);
     void onPressLong(Button *button);
     void onDoublePress(Button *button);
-    void onSimultaneousPress();
+    void onSimultaneousPress(Button *button);
     void onSimultaneousPressLong();
     void onWasReleased(Button *button);
 
