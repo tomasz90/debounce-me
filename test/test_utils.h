@@ -1,5 +1,7 @@
-#ifndef DEBOUNCE_ME_TESTUTILS_H
-#define DEBOUNCE_ME_TESTUTILS_H
+#pragma once
+
+#ifndef DEBOUNCE_ME_TEST_UTILS_H
+#define DEBOUNCE_ME_TEST_UTILS_H
 
 #include <unity.h>
 #include "Button.h"
@@ -109,4 +111,4 @@ void assertAllEqual0() { assertAllEqual0Except(none, 0); }
 
 void loop() { } /* Required by Arduino */
 
-#endif //DEBOUNCE_ME_TESTUTILS_H
+#endif //DEBOUNCE_ME_TEST_UTILS_H
