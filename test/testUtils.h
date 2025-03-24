@@ -1,6 +1,8 @@
 #ifndef DEBOUNCE_ME_TESTUTILS_H
 #define DEBOUNCE_ME_TESTUTILS_H
 
+#include <map>
+
 enum Actions {
     PRESS_A,
     LONG_PRESS_A,
@@ -101,6 +103,7 @@ void resetActions() {
     mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C] = 0;
 }
 
+#if !LEGACY
 void pushButton(Button *button) {
     digitalWrite(button->pin, LOW);
 }
@@ -108,6 +111,16 @@ void pushButton(Button *button) {
 void releaseButton(Button *button) {
     digitalWrite(button->pin, HIGH);
 }
+#else
+void pushButton(Button &button) {
+    digitalWrite(button.pin, LOW);
+}
+
+void releaseButton(Button &button) {
+    digitalWrite(button.pin, HIGH);
+}
+#endif
+
 
 void assertAllEqual0Except(Actions action, int times = 1) {
     for (auto &pair: mapOfActions) {

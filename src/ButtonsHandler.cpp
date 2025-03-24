@@ -29,14 +29,15 @@ ButtonsHandler::ButtonsHandler(Button **buttons, uint8_t numButtons) : numButton
 
 uint8_t ButtonsHandler::getButtonIndex(Button* button) const {
     for(uint8_t i = 0; i < numButtons; i++) {
-        if(buttons[i] == button) return i;
+        if (buttons[i] == button) return i;
     }
     return MAX_BUTTONS;
 }
 
 bool ButtonsHandler::checkGroupPressed(const ButtonGroup& group) const {
     for(uint8_t i = 0; i < group.count; i++) {
-        if(!group.buttons[i]->isPressed()) return false;
+        auto button = group.buttons[i];
+        if (!isPressed(button)) return false;
     }
     return true;
 }
@@ -44,8 +45,8 @@ bool ButtonsHandler::checkGroupPressed(const ButtonGroup& group) const {
 bool ButtonsHandler::checkGroupLongPressed(const ButtonGroup& group) const {
     for(uint8_t i = 0; i < group.count; i++) {
         const uint8_t idx = getButtonIndex(group.buttons[i]);
-        if(idx >= MAX_BUTTONS) return false;
-        if(millis() - buttonLastStartPressed[idx] < group.longPressTime) {
+        if (idx >= MAX_BUTTONS) return false;
+        if (millis() - buttonLastStartPressed[idx] < group.longPressTime) {
             return false;
         }
     }
@@ -56,18 +57,18 @@ bool ButtonsHandler::checkNoOtherPressed(const ButtonGroup& group) const {
     for(uint8_t i = 0; i < numButtons; i++) {
         bool inGroup = false;
         for(uint8_t j = 0; j < group.count; j++) {
-            if(buttons[i] == group.buttons[j]) {
+            if (buttons[i] == group.buttons[j]) {
                 inGroup = true;
                 break;
             }
         }
-        if(!inGroup && buttons[i]->isPressed()) return false;
+        if (!inGroup && isPressed(buttons[i])) return false;
     }
     return true;
 }
 
 void ButtonsHandler::setClickSimultaneous(Button** buttons, uint8_t count, void (*behavior)()) {
-    if(numSimultaneous >= MAX_GROUPS) return;
+    if (numSimultaneous >= MAX_GROUPS) return;
 
     ButtonGroup& group = simultaneousGroups[numSimultaneous++];
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
@@ -78,7 +79,7 @@ void ButtonsHandler::setClickSimultaneous(Button** buttons, uint8_t count, void 
 
 void ButtonsHandler::setClickSimultaneousLong(Button** buttons, uint8_t count, void (*behavior)(),
                                            unsigned int longPressTime) {
-    if(numSimultaneousLong >= MAX_GROUPS) return;
+    if (numSimultaneousLong >= MAX_GROUPS) return;
 
     ButtonGroup& group = simultaneousLongGroups[numSimultaneousLong++];
     group.count = count < MAX_BUTTONS ? count : MAX_BUTTONS;
@@ -124,13 +125,13 @@ bool ButtonsHandler::wasReleased(Button *button) const {
 // Common poll implementation
 void ButtonsHandler::poll() {
 #if !LEGACY
-    for(auto &button : buttons) pollState(button);
-    for(auto &button : buttons) processButtonState(button);
-    for(auto &button : buttons) resetState(button);
+    for (auto &button: buttons) pollState(button);
+    for (auto &button: buttons) processButtonState(button);
+    for (auto &button: buttons) resetState(button);
 #else
-    for(uint8_t i = 0; i < numButtons; i++) pollState(buttons[i]);
-    for(uint8_t i = 0; i < numButtons; i++) processButtonState(buttons[i]);
-    for(uint8_t i = 0; i < numButtons; i++) resetState(buttons[i]);
+    for (uint8_t i = 0; i < numButtons; i++) pollState(buttons[i]);
+    for (uint8_t i = 0; i < numButtons; i++) processButtonState(buttons[i]);
+    for (uint8_t i = 0; i < numButtons; i++) resetState(buttons[i]);
 #endif
 }
 
@@ -140,7 +141,7 @@ bool ButtonsHandler::isLongPressed(Button *button) const {
     auto lastStartPressed = buttonLastStartPressed.at(button);
 #else
     const uint8_t idx = getButtonIndex(button);
-    if(idx >= MAX_BUTTONS) return false;
+    if (idx >= MAX_BUTTONS) return false;
     auto lastStartPressed = buttonLastStartPressed[idx];
 #endif
     auto matchTime = millis() - lastStartPressed >= button->longPressTime && lastStartPressed != 0;
@@ -148,16 +149,16 @@ bool ButtonsHandler::isLongPressed(Button *button) const {
 }
 
 bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
-    if(isOneButtonPressed()) return false;
+    if (isOneButtonPressed()) return false;
 
 #if !LEGACY
-    if(!simultaneousLongPressTimes[simultaneousButtons]) return false;
+    if (!simultaneousLongPressTimes[simultaneousButtons]) return false;
     auto lastStartPressed = buttonLastStartPressed.at(button);
     return millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtons];
 #else
     for(uint8_t i = 0; i < numSimultaneousLong; i++) {
         const ButtonGroup& group = simultaneousLongGroups[i];
-        if(checkGroupPressed(group) {
+        if (checkGroupPressed(group)) {
             return checkGroupLongPressed(group) && checkNoOtherPressed(group);
         }
     }
@@ -165,7 +166,7 @@ bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
 #endif
 }
 
-bool& ButtonsHandler::wasLongPressed(Button *button) {
+bool &ButtonsHandler::wasLongPressed(Button *button) {
 #if !LEGACY
     return buttonWasLongPressed.at(button);
 #else
@@ -180,8 +181,8 @@ bool ButtonsHandler::isOneButtonPressed() const {
 #else
     uint8_t pressedCount = 0;
     for(uint8_t i = 0; i < numButtons; i++) {
-        if(buttons[i]->isPressed()) pressedCount++;
-        if(pressedCount > 1) return false;
+        if (isPressed(buttons[i])) pressedCount++;
+        if (pressedCount > 1) return false;
     }
     return true;
 #endif
@@ -253,8 +254,8 @@ void ButtonsHandler::onSimultaneousPressLong() {
 #else
     for(uint8_t i = 0; i < numSimultaneousLong; i++) {
         ButtonGroup& group = simultaneousLongGroups[i];
-        if(checkGroupPressed(group) && checkNoOtherPressed(group)) {
-            if(group.behavior) group.behavior();
+        if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
+            if (group.behavior) group.behavior();
             break;
         }
     }
@@ -283,8 +284,8 @@ void ButtonsHandler::onSimultaneousPress(Button *button) {
 #else
     for(uint8_t i = 0; i < numSimultaneous; i++) {
         ButtonGroup& group = simultaneousGroups[i];
-        if(checkGroupPressed(group) && checkNoOtherPressed(group)) {
-            if(group.behavior) group.behavior();
+        if (checkGroupPressed(group) && checkNoOtherPressed(group)) {
+            if (group.behavior) group.behavior();
             break;
         }
     }

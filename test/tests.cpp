@@ -301,6 +301,7 @@ void testCombinations(void) {
 void setup() {
     Serial.begin(115200);
 
+#if !LEGACY
     buttonA->setClick(pressA);
     buttonB->setClick(pressB);
     buttonC->setClick(pressC);
@@ -311,12 +312,6 @@ void setup() {
 
     buttonA->setClickDouble(doublePressA, DOUBLE_PRESS_TIME);
 
-    // this is right place, it overwrites previously sets in method setClick...
-    pinMode(BUTTON_PIN_A, OUTPUT);
-    pinMode(BUTTON_PIN_B, OUTPUT);
-    pinMode(BUTTON_PIN_C, OUTPUT);
-
-#if !LEGACY
     buttonsHandler.setClickSimultaneous({buttonA, buttonB}, simultaneousPressAB);
     buttonsHandler.setClickSimultaneousLong({buttonA, buttonB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
@@ -330,8 +325,18 @@ void setup() {
 
     buttonsHandler.pollOnce();
 #else
+    buttonA.setClick(pressA);
+    buttonB.setClick(pressB);
+    buttonC.setClick(pressC);
+
+    buttonA.setClickLong(longPressA, LONG_PRESS_TIME, true);
+    buttonB.setClickLong(longPressB, LONG_PRESS_TIME, true);
+    buttonC.setClickLong(longPressC, LONG_PRESS_TIME, true);
+
+    buttonA.setClickDouble(doublePressA, DOUBLE_PRESS_TIME);
+
     Button *buttonsAB[] = {&buttonA, &buttonB};
-    Button *buttonsAC[] = {&buttonA, &buttonB};
+    Button *buttonsAC[] = {&buttonA, &buttonC};
     Button *buttonsBC[] = {&buttonB, &buttonC};
 
     buttonsHandler.setClickSimultaneous(buttonsAB, 2, simultaneousPressAB);
@@ -344,6 +349,11 @@ void setup() {
     buttonsHandler.setClickSimultaneous(buttons, 3, simultaneousPressABC);
     buttonsHandler.setClickSimultaneousLong(buttons, 3, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 #endif
+
+    // this is right place, it overwrites previously sets in method setClick...
+    pinMode(BUTTON_PIN_A, OUTPUT);
+    pinMode(BUTTON_PIN_B, OUTPUT);
+    pinMode(BUTTON_PIN_C, OUTPUT);
 
     UNITY_BEGIN();
 
