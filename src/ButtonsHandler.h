@@ -24,10 +24,12 @@ class ButtonsHandler {
 public:
 #if !LEGACY
     ButtonsHandler(std::initializer_list<Button*> buttons);
+
     void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
     void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 #else
     ButtonsHandler(Button **buttons, uint8_t numButtons);
+
     void setClickSimultaneous(Button** buttons, uint8_t count, void (*behavior)());
     void setClickSimultaneousLong(Button** buttons, uint8_t count, void (*behavior)(), unsigned int longPressTime = 1000);
 #endif
@@ -53,6 +55,7 @@ private:
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
     std::map<std::set<Button*>, int> simultaneousLongPressTimes;
+
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, unsigned long> buttonLastClicked;
     std::map<Button*, bool> buttonWasLongPressed;
@@ -67,6 +70,7 @@ private:
         Button* buttons[MAX_BUTTONS];
         uint8_t count;
         void (*behavior)();
+        void (*behaviorLong)();
         unsigned int longPressTime;
     };
 

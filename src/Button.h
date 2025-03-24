@@ -18,7 +18,7 @@ enum Mode {
 #if !LEGACY
     IN_PULLDOWN = INPUT_PULLDOWN,
 #else
-    IN_PULLDOWN = INPUT,
+    IN_PULLDOWN = INPUT_PULLDOWN,
 #endif
 };
 
