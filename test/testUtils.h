@@ -1,7 +1,12 @@
 #ifndef DEBOUNCE_ME_TESTUTILS_H
 #define DEBOUNCE_ME_TESTUTILS_H
 
-enum Actions {
+#include <unity.h>
+#include "Button.h"
+#include <map>
+
+enum Action {
+    NONE,
     PRESS_A,
     LONG_PRESS_A,
     DOUBLE_PRESS_A,
@@ -21,8 +26,9 @@ enum Actions {
     SIMULTANEOUS_LONG_PRESS_A_B_C
 };
 
-const char *getActionName(Actions action) {
-    std::map <Actions, std::string> actionNames = {
+const char *getActionName(Action action) {
+    std::map<Action, std::string> actionNames = {
+            {NONE,                          "NONE"},
             {PRESS_A,                       "PRESS_A"},
             {LONG_PRESS_A,                  "LONG_PRESS_A"},
             {DOUBLE_PRESS_A,                "DOUBLE_PRESS_A"},
@@ -45,7 +51,9 @@ const char *getActionName(Actions action) {
     return actionNames[action].c_str();
 }
 
-std::map<Actions, int> mapOfActions;
+std::map<Action, int> mapOfActions;
+
+void none() {} // do nothing
 
 void pressA() { mapOfActions[PRESS_A]++; }
 
@@ -82,6 +90,7 @@ void simultaneousPressABC() { mapOfActions[SIMULTANEOUS_PRESS_A_B_C]++; }
 void simultaneousLongPressABC() { mapOfActions[SIMULTANEOUS_LONG_PRESS_A_B_C]++; }
 
 void resetActions() {
+    mapOfActions[NONE] = 0;
     mapOfActions[PRESS_A] = 0;
     mapOfActions[LONG_PRESS_A] = 0;
     mapOfActions[DOUBLE_PRESS_A] = 0;
@@ -109,22 +118,32 @@ void releaseButton(Button *button) {
     digitalWrite(button->pin, HIGH);
 }
 
-void assertAllEqual0Except(Actions action, int times = 1) {
+void assertAllEqual0Except(Action action, int times = 1) {
     for (auto &pair: mapOfActions) {
         if (pair.first != action) {
             if (0 != pair.second) {
                 Serial.print("WHEN CHECKING: ");
-                Serial.println(getActionName(action));
-                Serial.print("ACTION: ");
+                Serial.print(getActionName(action));
+                Serial.print(", ");
                 auto actionName = getActionName(pair.first);
                 Serial.print(actionName);
-                Serial.print(", should be: 0, but was: ");
-                Serial.println(pair.second);
+                Serial.print(" should be: 0, but was: ");
+                Serial.print(pair.second);
+                Serial.print(" ->>>>>>>   ");
             }
             TEST_ASSERT_EQUAL(0, pair.second);
         }
     }
+    if (times != mapOfActions[action]) {
+        Serial.print("WHEN CHECKING: ");
+        Serial.print(getActionName(action));
+        Serial.printf(", should overall be actions: %d, but was: %d  ->>>>>>>   ", times, mapOfActions[action]);
+    }
     TEST_ASSERT_EQUAL(times, mapOfActions[action]);
+}
+
+void assertAllEqual0() {
+    assertAllEqual0Except(NONE, 0);
 }
 
 void loop() {
