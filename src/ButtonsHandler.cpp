@@ -352,3 +352,20 @@ void ButtonsHandler::onWasReleased(Button *button) {
     buttonLastStartPressed[idx] = millis();
 #endif
 }
+
+//TODO: check after all tests are passing
+//void ButtonsHandler::onWasReleased(Button *button) {
+//#if !LEGACY
+//    simultaneousButtons.insert(button);
+//#else
+//    // Handled through group checking in processButtonState
+//#endif
+//    wasSimultaneousPress = false;
+//    wasLongPressed(button) = false;
+//#if !LEGACY
+//    buttonLastStartPressed[button] = millis();
+//#else
+//    const uint8_t idx = getButtonIndex(button);
+//    buttonLastStartPressed[idx] = millis();
+//#endif
+//}

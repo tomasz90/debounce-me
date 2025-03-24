@@ -337,15 +337,15 @@ void setup() {
     Button *buttonsAC[] = {&buttonA, &buttonC};
     Button *buttonsBC[] = {&buttonB, &buttonC};
 
-    buttonsHandler.setClickSimultaneous(buttonsAB, 2, simultaneousPressAB);
-    buttonsHandler.setClickSimultaneousLong(buttonsAB, 2, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous(buttonsAB, sizeof(buttonsAB) / sizeof(buttonsAB[0]), simultaneousPressAB);
+    buttonsHandler.setClickSimultaneousLong(buttonsAB, sizeof(buttonsAB) / sizeof(buttonsAB[0]), simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Lets assume this combination is missing:
     // buttonsHandler.setClickSimultaneous({buttonA, buttonC}, simultaneousPressAC);
-    buttonsHandler.setClickSimultaneousLong(buttonsAC, 2, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setClickSimultaneous(buttonsBC, 2, simultaneousPressBC);
-    buttonsHandler.setClickSimultaneousLong(buttonsBC, 2, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
-    buttonsHandler.setClickSimultaneous(buttons, 3, simultaneousPressABC);
-    buttonsHandler.setClickSimultaneousLong(buttons, 3, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneousLong(buttonsAC, sizeof(buttonsAC) / sizeof(buttonsAC[0]), simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous(buttonsBC, sizeof(buttonsBC) / sizeof(buttonsBC[0]), simultaneousPressBC);
+    buttonsHandler.setClickSimultaneousLong(buttonsBC, sizeof(buttonsBC) / sizeof(buttonsBC[0]), simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
+    buttonsHandler.setClickSimultaneous(buttons, sizeof(buttons) / sizeof(buttons[0]), simultaneousPressABC);
+    buttonsHandler.setClickSimultaneousLong(buttons, sizeof(buttons) / sizeof(buttons[0]), simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 #endif
 
     buttonsHandler.pollOnce();
