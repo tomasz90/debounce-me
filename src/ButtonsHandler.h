@@ -31,20 +31,25 @@ public:
 #endif
 
 private:
+    struct ButtonTemporaryProperties {
+        unsigned long buttonLastStartPressed;
+        unsigned long buttonLastClicked;
+        bool buttonWasLongPressed;
+    };
+
+    struct ButtonSimultaneousProperties {
+        std::function<void()> behavior;
+        std::function<void()> behaviorLong;
+        unsigned int longPressTime = -1;
+    };
+
     unsigned int debounceTime = 20;
     bool wasSimultaneousPress = false;
 
     std::vector<Button*> buttons;
-
-    std::set<Button*> simultaneousButtonsTemporary;
-
-    std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
-    std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
-    std::map<std::set<Button*>, unsigned int> simultaneousLongPressTimes;
-
-    std::map<Button*, unsigned long> buttonLastStartPressed;
-    std::map<Button*, unsigned long> buttonLastClicked;
-    std::map<Button*, bool> buttonWasLongPressed;
+    std::map<Button*, ButtonTemporaryProperties> buttonTemporary;
+    std::map<std::set<Button*>, ButtonSimultaneousProperties> simultaneousBehaviors;
+    std::set<Button*> currentlyPressed;
 
 #if IS_FREE_RTOS_SUPPORTED
     TimerHandle_t timer;
@@ -57,10 +62,10 @@ private:
     bool wasPressed(Button *button) const;
     bool wasReleased(Button *button) const;
 
-    bool isLongPressed(Button *button) const;
+    bool isLongPressed(Button *button);
     bool isSimultaneousLongPressed(Button *button);
     bool& wasLongPressed(Button *button);
-    bool isOneButtonPressed() const;
+    bool areMultipleButtonsPressed() const;
 
     void processButtonState(Button *button);
 

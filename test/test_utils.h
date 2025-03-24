@@ -28,6 +28,7 @@ void simultaneousPressBC() { mapOfActions[simultaneousPressBC]++; }
 void simultaneousLongPressBC() { mapOfActions[simultaneousLongPressBC]++; }
 void simultaneousPressABC() { mapOfActions[simultaneousPressABC]++; }
 void simultaneousLongPressABC() { mapOfActions[simultaneousLongPressABC]++; }
+void simultaneousPressABCD() { mapOfActions[simultaneousPressABCD]++; }
 
 const char *getActionName(void (*action)()) {
     std::map<void (*)(), std::string> actionNames = {
@@ -48,7 +49,8 @@ const char *getActionName(void (*action)()) {
             {simultaneousPressBC,        "simultaneousPressBC"},
             {simultaneousLongPressBC,   "simultaneousLongPressBC"},
             {simultaneousPressABC,      "simultaneousPressABC"},
-            {simultaneousLongPressABC, "simultaneousLongPressABC"}
+            {simultaneousLongPressABC, "simultaneousLongPressABC"},
+            {simultaneousPressABCD,     "simultaneousPressABCD"},
     };
 
     return actionNames[action].c_str();
@@ -73,6 +75,7 @@ void resetActions() {
     mapOfActions[simultaneousLongPressBC] = 0;
     mapOfActions[simultaneousPressABC] = 0;
     mapOfActions[simultaneousLongPressABC] = 0;
+    mapOfActions[simultaneousPressABCD] = 0;
 }
 
 void pushButton(Button *button) {

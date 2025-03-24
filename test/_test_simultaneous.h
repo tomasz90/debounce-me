@@ -27,6 +27,18 @@ void testOnPressSimultaneous2() {
     assertAllEqual0Except(simultaneousPressABC);
 }
 
+void testOnPressSimultaneousNoneMatch() {
+    pushButton(btnA);
+    pushButton(btnD);
+    delay(SMALL_DELAY);
+
+    releaseButton(btnA);
+    releaseButton(btnD);
+    delay(SMALL_DELAY);
+
+    assertAllEqual0();
+}
+
 void testOnPressSimultaneous3() {
     pushButton(btnA);
     delay(SMALL_DELAY);
@@ -55,27 +67,24 @@ void testOnPressSimultaneousLong() {
     assertAllEqual0Except(simultaneousLongPressAB);
 }
 
-void testOnPressSimultaneousLong2() {
+void testOnPressSimultaneous4() {
     pushButton(btnA);
     pushButton(btnB);
     pushButton(btnC);
-    pushButton(btnD);
     delay(SIMULTANEOUS_LONG_PRESS_DELAY);
 
     releaseButton(btnA);
     releaseButton(btnB);
     releaseButton(btnC);
-    releaseButton(btnD);
-
     delay(SMALL_DELAY);
 
     assertAllEqual0Except(simultaneousLongPressABC);
 }
 
-void testNotOnPressSimultaneousLong() {
+void testNotOnPressSimultaneous5() {
     pushButton(btnA);
     pushButton(btnB);
-    delay(LONG_PRESS_DELAY);
+    delay(SIMULTANEOUS_SHORT_PRESS_DELAY);
 
     releaseButton(btnA);
     releaseButton(btnB);
@@ -84,11 +93,11 @@ void testNotOnPressSimultaneousLong() {
     assertAllEqual0Except(simultaneousPressAB);
 }
 
-void testNotOnPressSimultaneousLong2() {
+void testNotOnPressSimultaneous6() {
     pushButton(btnA);
     pushButton(btnB);
     pushButton(btnC);
-    delay(LONG_PRESS_DELAY);
+    delay(SIMULTANEOUS_SHORT_PRESS_DELAY);
 
     releaseButton(btnA);
     releaseButton(btnB);
@@ -188,5 +197,23 @@ void testCombinations() {
 
     assertAllEqual0Except(simultaneousLongPressABC);
     resetActions();
+}
+
+void testOnPressSimultaneousAll() {
+    pushButton(btnA);
+    pushButton(btnB);
+    pushButton(btnC);
+    pushButton(btnD);
+
+    delay(SMALL_DELAY);
+
+    releaseButton(btnA);
+    releaseButton(btnB);
+    releaseButton(btnC);
+    releaseButton(btnD);
+
+    delay(SMALL_DELAY);
+
+    assertAllEqual0Except(simultaneousPressABCD);
 }
 

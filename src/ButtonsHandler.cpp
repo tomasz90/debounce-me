@@ -2,8 +2,8 @@
 
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
     std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
-        buttonLastStartPressed[button] = 0;
-        buttonWasLongPressed[button] = false;
+        buttonTemporary[button].buttonLastStartPressed = 0;
+        buttonTemporary[button].buttonWasLongPressed = false;
     });
 }
 
@@ -12,13 +12,13 @@ void ButtonsHandler::setDebounceTime(unsigned int time) {
 }
 
 void ButtonsHandler::setClickSimultaneous(std::set<Button *> _buttons, std::function<void()> behavior) {
-    simultaneousBehaviors[_buttons] = std::move(behavior);
+    simultaneousBehaviors[_buttons].behavior = std::move(behavior);
 }
 
 void ButtonsHandler::setClickSimultaneousLong(std::set<Button *> _buttons, std::function<void()> behavior,
                                               unsigned int longPressTime) {
-    simultaneousBehaviorsLong[_buttons] = std::move(behavior);
-    simultaneousLongPressTimes[_buttons] = longPressTime;
+    simultaneousBehaviors[_buttons].behaviorLong = std::move(behavior);
+    simultaneousBehaviors[_buttons].longPressTime = longPressTime;
 }
 
 void ButtonsHandler::pollState(Button *button) const {
@@ -50,26 +50,26 @@ bool ButtonsHandler::wasReleased(Button *button) const {
     return button->state.lastState == RELEASED && button->state.currentState == PRESSED;
 }
 
-bool ButtonsHandler::isLongPressed(Button *button) const {
+bool ButtonsHandler::isLongPressed(Button *button) {
     if (button->onPressLong == nullptr) return false;
-    auto lastStartPressed = buttonLastStartPressed.at(button);
+    auto lastStartPressed = buttonTemporary[button].buttonLastStartPressed;
     auto matchTime = millis() - lastStartPressed >= button->longPressTime && lastStartPressed != 0;
-    return matchTime && isOneButtonPressed();
+    return matchTime && !areMultipleButtonsPressed();
 }
 
 bool ButtonsHandler::isSimultaneousLongPressed(Button *button) {
-    if (isOneButtonPressed()) return false;
-    if (!simultaneousLongPressTimes[simultaneousButtonsTemporary]) return false;
-    auto lastStartPressed = buttonLastStartPressed.at(button);
-    return millis() - lastStartPressed >= simultaneousLongPressTimes[simultaneousButtonsTemporary];
+    if (!areMultipleButtonsPressed()) return false;
+    if (simultaneousBehaviors[currentlyPressed].longPressTime == -1) return false;
+    auto lastStartPressed = buttonTemporary[button].buttonLastStartPressed;
+    return millis() - lastStartPressed >= simultaneousBehaviors[currentlyPressed].longPressTime;
 }
 
 bool &ButtonsHandler::wasLongPressed(Button *button) {
-    return buttonWasLongPressed.at(button);
+    return buttonTemporary[button].buttonWasLongPressed;
 }
 
-bool ButtonsHandler::isOneButtonPressed() const {
-    return simultaneousButtonsTemporary.size() < 2;  // this is required to be able to run multiple OnPressLong
+bool ButtonsHandler::areMultipleButtonsPressed() const {
+    return currentlyPressed.size() >= 2;  // this is required to be able to run multiple OnPressLong
 }
 
 // this function can be used to poll inside `setup()`
@@ -101,21 +101,21 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
     bool isLongPress = isLongPressed(button);
     bool _wasPressed = wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPressed(button);
-    bool _isOneButtonPressed = isOneButtonPressed();
+    bool _areMultipleButtonsPressed = areMultipleButtonsPressed();
     bool isDoublePressSupported = button->onPressDouble != nullptr;
-    bool isRegisteredPress = buttonLastClicked[button] != 0;
-    bool isElapsedTime = millis() - buttonLastClicked[button] > button->doublePressTime;
+    bool isRegisteredPress = buttonTemporary[button].buttonLastClicked != 0;
+    bool isElapsedTime = millis() - buttonTemporary[button].buttonLastClicked > button->doublePressTime;
 
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-    } else if ((_wasPressed && _isOneButtonPressed && !isDoublePressSupported) ||
+    } else if ((_wasPressed && !_areMultipleButtonsPressed && !isDoublePressSupported) ||
                (isRegisteredPress && isElapsedTime)) {
         onPress(button);
-    } else if (_wasPressed && _isOneButtonPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
+    } else if (_wasPressed && !_areMultipleButtonsPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
-    } else if (_wasPressed && _isOneButtonPressed && !isRegisteredPress) {
+    } else if (_wasPressed && !_areMultipleButtonsPressed && !isRegisteredPress) {
         registerPress(button);
     } else if (_wasPressed) {
         onSimultaneousPress(button);
@@ -125,48 +125,48 @@ void ButtonsHandler::processButtonState(Button *button) {
 }
 
 void ButtonsHandler::onSimultaneousPressLong() {
-    auto behavior = simultaneousBehaviorsLong[simultaneousButtonsTemporary];
+    auto behavior = simultaneousBehaviors[currentlyPressed].behaviorLong;
     if (behavior) behavior();
-    simultaneousButtonsTemporary.clear();
+    currentlyPressed.clear();
     wasSimultaneousPress = true;
 }
 
 void ButtonsHandler::onPressLong(Button *button) {
     button->onPressLong();
-    simultaneousButtonsTemporary.clear();
+    currentlyPressed.clear();
     wasLongPressed(button) = true;
-    buttonLastStartPressed[button] = button->isMultipleLongPressSupported ? millis() : 0;
+    buttonTemporary[button].buttonLastStartPressed = button->isMultipleLongPressSupported ? millis() : 0;
 }
 
 void ButtonsHandler::onSimultaneousPress(Button *button) {
-    auto behavior = simultaneousBehaviors[simultaneousButtonsTemporary];
+    auto behavior = simultaneousBehaviors[currentlyPressed].behavior;
     if (behavior) behavior();
-    simultaneousButtonsTemporary.clear();
+    currentlyPressed.clear();
     wasSimultaneousPress = true;
-    buttonLastStartPressed[button] = 0;
+    buttonTemporary[button].buttonLastStartPressed = 0;
 }
 
 void ButtonsHandler::registerPress(Button *button) {
-    buttonLastClicked[button] = millis();
+    buttonTemporary[button].buttonLastClicked = millis();
 }
 
 void ButtonsHandler::onDoublePress(Button *button) {
     button->onPressDouble();
-    simultaneousButtonsTemporary.clear();
-    buttonLastStartPressed[button] = 0;
-    buttonLastClicked[button] = 0;
+    currentlyPressed.clear();
+    buttonTemporary[button].buttonLastStartPressed = 0;
+    buttonTemporary[button].buttonLastClicked = 0;
 }
 
 void ButtonsHandler::onPress(Button *button) {
     button->onPress();
-    simultaneousButtonsTemporary.clear();
-    buttonLastStartPressed[button] = 0;
-    buttonLastClicked[button] = 0;
+    currentlyPressed.clear();
+    buttonTemporary[button].buttonLastStartPressed = 0;
+    buttonTemporary[button].buttonLastClicked = 0;
 }
 
 void ButtonsHandler::onWasReleased(Button *button) {
-    simultaneousButtonsTemporary.insert(button);
+    currentlyPressed.insert(button);
     wasSimultaneousPress = false;
     wasLongPressed(button) = false;
-    buttonLastStartPressed[button] = millis();
+    buttonTemporary[button].buttonLastStartPressed = millis();
 }

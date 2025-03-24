@@ -26,17 +26,21 @@ void setup() {
     pinMode(BUTTON_PIN_A, OUTPUT);
     pinMode(BUTTON_PIN_B, OUTPUT);
     pinMode(BUTTON_PIN_C, OUTPUT);
+    pinMode(BUTTON_PIN_D, OUTPUT);
 
     btnHlr.setClickSimultaneous({btnA, btnB}, simultaneousPressAB);
     btnHlr.setClickSimultaneousLong({btnA, btnB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
     // Let's assume this combination is missing:
     // buttonsHandler.setClickSimultaneous({buttonA, buttonC}, simultaneousPressAC);
-    btnHlr.setClickSimultaneousLong({btnA, btnC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
     btnHlr.setClickSimultaneous({btnB, btnC}, simultaneousPressBC);
-    btnHlr.setClickSimultaneousLong({btnB, btnC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
     btnHlr.setClickSimultaneous({btnA, btnB, btnC}, simultaneousPressABC);
+    btnHlr.setClickSimultaneous({btnA, btnB, btnC, btnD}, simultaneousPressABCD);
+
+    btnHlr.setClickSimultaneousLong({btnA, btnC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
+    btnHlr.setClickSimultaneousLong({btnB, btnC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
     btnHlr.setClickSimultaneousLong({btnA, btnB, btnC}, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 
+    btnHlr.setDebounceTime(DEBOUNCE_TIME);
     btnHlr.pollOnce();
 
     UNITY_BEGIN();
@@ -48,12 +52,14 @@ void setup() {
     RUN_TEST(testOnPressLongMultiple);
     RUN_TEST(testOnPressSimultaneous);
     RUN_TEST(testOnPressSimultaneous2);
+    RUN_TEST(testOnPressSimultaneousNoneMatch);
     RUN_TEST(testOnPressSimultaneous3);
     RUN_TEST(testOnPressSimultaneousLong);
-    RUN_TEST(testOnPressSimultaneousLong2);
-    RUN_TEST(testNotOnPressSimultaneousLong);
-    RUN_TEST(testNotOnPressSimultaneousLong2);
+    RUN_TEST(testOnPressSimultaneous4);
+    RUN_TEST(testNotOnPressSimultaneous5);
+    RUN_TEST(testNotOnPressSimultaneous6);
     RUN_TEST(testCombinations);
+    RUN_TEST(testOnPressSimultaneousAll);
 
     UNITY_END();
 
@@ -69,4 +75,6 @@ void setUp() {
     releaseButton(btnD);
 }
 
-void tearDown() { /* This function is run after EACH TEST */ }
+void tearDown() {
+    delay(DELAY_BETWEEN_TESTS);
+}
