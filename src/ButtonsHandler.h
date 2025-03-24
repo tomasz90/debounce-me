@@ -24,13 +24,15 @@ class ButtonsHandler {
 public:
 #if !LEGACY
     ButtonsHandler(std::initializer_list<Button*> buttons);
+    void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
+    void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 #else
     ButtonsHandler(Button **buttons, uint8_t numButtons);
+    void setClickSimultaneous(Button** buttons, uint8_t count, void (*behavior)());
+    void setClickSimultaneousLong(Button** buttons, uint8_t count, void (*behavior)(), unsigned int longPressTime = 1000);
 #endif
 
     void setDebounceTime(unsigned int time);
-    void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
-    void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
 
     void poll();
 
@@ -41,24 +43,42 @@ public:
 #endif
 
 private:
+    unsigned int debounceTime = 20;
+    bool wasSimultaneousPress = false;
+
 #if !LEGACY
     std::vector<Button*> buttons;
-#else
-    static const uint8_t MAX_BUTTONS = 10;
-    Button *buttons[MAX_BUTTONS]; // Fixed-size array
-    uint8_t numButtons;
-#endif
+
     std::set<Button*> simultaneousButtons;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviors;
     std::map<std::set<Button*>, std::function<void()>> simultaneousBehaviorsLong;
     std::map<std::set<Button*>, int> simultaneousLongPressTimes;
-
-    bool wasSimultaneousPress = false;
-    unsigned int debounceTime = 20;
-
     std::map<Button*, unsigned long> buttonLastStartPressed;
     std::map<Button*, unsigned long> buttonLastClicked;
     std::map<Button*, bool> buttonWasLongPressed;
+#else
+    static const uint8_t MAX_BUTTONS = 10;
+    static const uint8_t MAX_GROUPS = 5;
+
+    Button* buttons[MAX_BUTTONS];
+    uint8_t numButtons;
+
+    struct ButtonGroup {
+        Button* buttons[MAX_BUTTONS];
+        uint8_t count;
+        void (*behavior)();
+        unsigned int longPressTime;
+    };
+
+    ButtonGroup simultaneousGroups[MAX_GROUPS];
+    ButtonGroup simultaneousLongGroups[MAX_GROUPS];
+    uint8_t numSimultaneous = 0;
+    uint8_t numSimultaneousLong = 0;
+
+    unsigned long buttonLastStartPressed[MAX_BUTTONS];
+    unsigned long buttonLastClicked[MAX_BUTTONS];
+    bool buttonWasLongPressed[MAX_BUTTONS];
+#endif
 
 #if IS_FREE_RTOS_SUPPORTED
     TimerHandle_t timer;
@@ -85,6 +105,13 @@ private:
     void onDoublePress(Button *button);
     void registerPress(Button *button);
     void onWasReleased(Button *button);
+
+#if LEGACY
+    uint8_t getButtonIndex(Button* button) const;
+    bool checkGroupPressed(const ButtonGroup& group) const;
+    bool checkGroupLongPressed(const ButtonGroup& group) const;
+    bool checkNoOtherPressed(const ButtonGroup& group) const;
+#endif
 };
 
 
