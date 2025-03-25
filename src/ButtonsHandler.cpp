@@ -100,10 +100,7 @@ void ButtonsHandler::poll() {
 }
 
 void ButtonsHandler::processButtonState(Button *button) {
-    if(lastBtnStates[button] != btnStates[button]) {
-        btnStates[button].log(button->pinSecond);
-    }
-    lastBtnStates[button] = btnStates[button];
+    bool _isPressed = isPressed(button);
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
     bool isLongPress = isLongPressed(button);
     bool _wasPressed = wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPressed(button);
@@ -121,10 +118,18 @@ void ButtonsHandler::processButtonState(Button *button) {
             isRegisteredPress,
             isElapsedTime
     };
-    if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
+
+    if(lastBtnStates[button] != btnStates[button]) {
+        btnStates[button].log(button->pinSecond);
+        Serial.print("CURRENTLY PRESSED: ");
+        Serial.println(currentlyPressed.size());
+    }
+    lastBtnStates[button] = btnStates[button];
+
+    if (_isPressed && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
         Serial.println("\nXXXXXXXXXXXXXXXX SIMULTANEOUS LONG PRESS XXXXXXXXXXXXXXXX\n");
-    } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
+    } else if (_isPressed && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
         Serial.println("\nXXXXXXXXXXXXXXXX        LONG PRESS       XXXXXXXXXXXXXXXX\n");
     } else if ((_wasPressed && !_areMultipleButtonsPressed && !isDoublePressSupported) ||
@@ -136,11 +141,13 @@ void ButtonsHandler::processButtonState(Button *button) {
         Serial.println("\nXXXXXXXXXXXXXXXX       DOUBLE PRESS      XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed && !_areMultipleButtonsPressed && !isRegisteredPress) {
         registerPress(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX       ON REGISTERED      XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed) {
         onSimultaneousPress(button);
         Serial.println("\nXXXXXXXXXXXXXXXX    SIMULTANEOUS PRESS    XXXXXXXXXXXXXXXX\n");
     } else if (wasReleased(button)) {
         onWasReleased(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX      ON WAS RELEASED     XXXXXXXXXXXXXXXX\n");
     }
 }
 
