@@ -77,18 +77,18 @@ private:
             return !(*this == other);
         }
 
-        void log(int btnNumber) const {
-            Serial.println("-------------------------------------------------------");
-            Serial.println(String(btnNumber) + "._isPressed:                 " + String(_isPressed));
-            Serial.println(String(btnNumber) + ".isSimultaneousLongPress:    " + String(isSimultaneousLongPress));
-            Serial.println(String(btnNumber) + ".isLongPress:                " + String(isLongPress));
-            Serial.println(String(btnNumber) + "._wasPressed:                " + String(_wasPressed));
-            Serial.println(String(btnNumber) + "._areMultipleButtonsPressed: " + String(_areMultipleButtonsPressed));
-            Serial.println(String(btnNumber) + ".isDoublePressSupported:     " + String(isDoublePressSupported));
-            Serial.println(String(btnNumber) + ".isRegisteredPress:          " + String(isRegisteredPress));
-            Serial.println(String(btnNumber) + ".isElapsedTime:              " + String(isElapsedTime));
-            Serial.println(String(btnNumber) + "._wasReleased:               " + String(_wasReleased));
-        }
+//        void log(int btnNumber) const {
+//            Serial.println("-------------------------------------------------------");
+//            Serial.println(String(btnNumber) + "._isPressed:                 " + String(_isPressed));
+//            Serial.println(String(btnNumber) + ".isSimultaneousLongPress:    " + String(isSimultaneousLongPress));
+//            Serial.println(String(btnNumber) + ".isLongPress:                " + String(isLongPress));
+//            Serial.println(String(btnNumber) + "._wasPressed:                " + String(_wasPressed));
+//            Serial.println(String(btnNumber) + "._areMultipleButtonsPressed: " + String(_areMultipleButtonsPressed));
+//            Serial.println(String(btnNumber) + ".isDoublePressSupported:     " + String(isDoublePressSupported));
+//            Serial.println(String(btnNumber) + ".isRegisteredPress:          " + String(isRegisteredPress));
+//            Serial.println(String(btnNumber) + ".isElapsedTime:              " + String(isElapsedTime));
+//            Serial.println(String(btnNumber) + "._wasReleased:               " + String(_wasReleased));
+//        }
     };
 
     unsigned int debounceTime = 20;

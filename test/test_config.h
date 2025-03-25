@@ -24,6 +24,7 @@
 #define DELAY_BETWEEN_TESTS 200
 
 #define DEBOUNCE_TIME 1
+#define POLLING_INTERVAL 2
 
 extern Button *btnA;
 extern Button *btnB;

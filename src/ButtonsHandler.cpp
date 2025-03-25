@@ -108,47 +108,47 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isElapsedTime = millis() - buttonTemporary[button].buttonLastClicked > button->doublePressTime;
     bool _wasReleased = wasReleased(button);
 
-    btnStates[button] = {
-            _isPressed,
-            isSimultaneousLongPress,
-            isLongPress,
-            _wasPressed,
-            _areMultipleButtonsPressed,
-            isDoublePressSupported,
-            isRegisteredPress,
-            isElapsedTime,
-            _wasReleased
-    };
-
-    if (lastBtnStates[button] != btnStates[button]) {
-        btnStates[button].log(button->pinSecond);
-        Serial.print("CURRENTLY PRESSED: ");
-        Serial.println(currentlyPressed.size());
-    }
-    lastBtnStates[button] = btnStates[button];
+//    btnStates[button] = {
+//            _isPressed,
+//            isSimultaneousLongPress,
+//            isLongPress,
+//            _wasPressed,
+//            _areMultipleButtonsPressed,
+//            isDoublePressSupported,
+//            isRegisteredPress,
+//            isElapsedTime,
+//            _wasReleased
+//    };
+//
+//    if (lastBtnStates[button] != btnStates[button]) {
+//        btnStates[button].log(button->pinSecond);
+//        Serial.print("CURRENTLY PRESSED: ");
+//        Serial.println(currentlyPressed.size());
+//    }
+//    lastBtnStates[button] = btnStates[button];
 
     if (_isPressed && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
-        Serial.println("\nXXXXXXXXXXXXXXXX SIMULTANEOUS LONG PRESS XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX SIMULTANEOUS LONG PRESS XXXXXXXXXXXXXXXX\n");
     } else if (_isPressed && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX        LONG PRESS       XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX        LONG PRESS       XXXXXXXXXXXXXXXX\n");
     } else if ((_wasPressed && !_areMultipleButtonsPressed && !isDoublePressSupported) ||
                (isRegisteredPress && isElapsedTime)) {
         onPress(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX           PRESS         XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX           PRESS         XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed && !_areMultipleButtonsPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX       DOUBLE PRESS      XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX       DOUBLE PRESS      XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed && !_areMultipleButtonsPressed && !isRegisteredPress) {
         registerPress(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX       ON REGISTERED      XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX       ON REGISTERED      XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed) {
         onSimultaneousPress(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX    SIMULTANEOUS PRESS    XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX    SIMULTANEOUS PRESS    XXXXXXXXXXXXXXXX\n");
     } else if (_wasReleased) {
         onWasReleased(button);
-        Serial.println("\nXXXXXXXXXXXXXXXX      ON WAS RELEASED     XXXXXXXXXXXXXXXX\n");
+//        Serial.println("\nXXXXXXXXXXXXXXXX      ON WAS RELEASED     XXXXXXXXXXXXXXXX\n");
     }
 }
 

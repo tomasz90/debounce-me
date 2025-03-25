@@ -41,7 +41,7 @@ void setup() {
     btnHlr.setClickSimultaneousLong({btnA, btnB, btnC}, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 
     btnHlr.setDebounceTime(DEBOUNCE_TIME);
-    btnHlr.pollOnce(3);
+    btnHlr.pollOnce(POLLING_INTERVAL);
 
     UNITY_BEGIN();
 
