@@ -1,6 +1,8 @@
 #include "_test_simple.h"
 #include "_test_simultaneous.h"
 
+#ifndef ARDUINO_ARCH_AVR
+
 Button *btnA = new Button(BUTTON_PIN_A, IN_PULLUP);
 Button *btnB = new Button(BUTTON_PIN_B, IN_PULLUP);
 Button *btnC = new Button(BUTTON_PIN_C, IN_PULLUP);
@@ -9,12 +11,12 @@ Button *btnD = new Button(BUTTON_PIN_D, IN_PULLUP);
 ButtonsHandler btnHlr({btnA, btnB, btnC, btnD});
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(BAUD_RATE);
 
     btnA->setClick(pressA);
     btnB->setClick(pressB);
     btnC->setClick(pressC);
-    btnD->setClick([]{});
+    btnD->setClick([] {});
 
     btnA->setClickLong(longPressA, LONG_PRESS_TIME, true);
     btnB->setClickLong(longPressB, LONG_PRESS_TIME, true);
@@ -29,19 +31,19 @@ void setup() {
     pinMode(BUTTON_PIN_D, OUTPUT);
 
     btnHlr.setClickSimultaneous({btnA, btnB}, simultaneousPressAB);
-    btnHlr.setClickSimultaneousLong({btnA, btnB}, simultaneousLongPressAB, SIMULTANEOUS_PRESS_TIME);
+    btnHlr.setClickSimultaneousLong({btnA, btnB}, simultaneousLongPressAB, SIMULTANEOUS_LONG_PRESS_TIME);
     // Let's assume this combination is missing:
     // buttonsHandler.setClickSimultaneous({buttonA, buttonC}, simultaneousPressAC);
     btnHlr.setClickSimultaneous({btnB, btnC}, simultaneousPressBC);
     btnHlr.setClickSimultaneous({btnA, btnB, btnC}, simultaneousPressABC);
     btnHlr.setClickSimultaneous({btnA, btnB, btnC, btnD}, simultaneousPressABCD);
 
-    btnHlr.setClickSimultaneousLong({btnA, btnC}, simultaneousLongPressAC, SIMULTANEOUS_PRESS_TIME);
-    btnHlr.setClickSimultaneousLong({btnB, btnC}, simultaneousLongPressBC, SIMULTANEOUS_PRESS_TIME);
-    btnHlr.setClickSimultaneousLong({btnA, btnB, btnC}, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
+    btnHlr.setClickSimultaneousLong({btnA, btnC}, simultaneousLongPressAC, SIMULTANEOUS_LONG_PRESS_TIME);
+    btnHlr.setClickSimultaneousLong({btnB, btnC}, simultaneousLongPressBC, SIMULTANEOUS_LONG_PRESS_TIME);
+    btnHlr.setClickSimultaneousLong({btnA, btnB, btnC}, simultaneousLongPressABC, SIMULTANEOUS_LONG_PRESS_TIME);
 
     btnHlr.setDebounceTime(DEBOUNCE_TIME);
-    btnHlr.pollOnce();
+    btnHlr.pollOnce(POLL_INTERVAL);
 
     UNITY_BEGIN();
 
@@ -78,3 +80,4 @@ void setUp() {
 void tearDown() {
     delay(DELAY_BETWEEN_TESTS);
 }
+#endif

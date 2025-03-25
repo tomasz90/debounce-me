@@ -2,14 +2,18 @@
 #define BUTTON_H
 
 #include <Arduino.h>
-#include <functional>
+#include <ArxContainer.h>
 
 #define RELEASED 0
 #define PRESSED 1
 
 enum Mode {
     IN_PULLUP = INPUT_PULLUP,
+#ifdef INPUT_PULLDOWN
     IN_PULLDOWN = INPUT_PULLDOWN,
+#else
+    IN_PULLDOWN = INPUT,
+#endif
 };
 
 struct Button {

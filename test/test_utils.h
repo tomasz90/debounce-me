@@ -3,10 +3,11 @@
 #ifndef DEBOUNCE_ME_TEST_UTILS_H
 #define DEBOUNCE_ME_TEST_UTILS_H
 
+#ifndef ARDUINO_ARCH_AVR
+
 #include <unity.h>
+#include <ArxContainer.h>
 #include "Button.h"
-#include <map>
-#include <functional>
 #include "test_config.h"
 
 std::map<void (*)(), int> mapOfActions;
@@ -32,7 +33,7 @@ void simultaneousLongPressABC() { mapOfActions[simultaneousLongPressABC]++; }
 void simultaneousPressABCD() { mapOfActions[simultaneousPressABCD]++; }
 
 const char *getActionName(void (*action)()) {
-    std::map<void (*)(), std::string> actionNames = {
+    std::map<void (*)(), String> actionNames = {
             {none,                          "none"},
             {pressA,                       "pressA"},
             {longPressA,                  "longPressA"},
@@ -116,4 +117,5 @@ void assertAllEqual0() { assertAllEqual0Except(none, 0); }
 
 void loop() { } /* Required by Arduino */
 
+#endif
 #endif //DEBOUNCE_ME_TEST_UTILS_H

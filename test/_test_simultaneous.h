@@ -1,6 +1,8 @@
 #include "test_config.h"
 #include "test_utils.h"
 
+#ifndef ARDUINO_ARCH_AVR
+
 void testOnPressSimultaneous() {
     pushButton(btnA);
     pushButton(btnB);
@@ -123,7 +125,7 @@ void testCombinations() {
     delay(SMALL_DELAY);
     pushButton(btnC);
 
-    delay(LONG_PRESS_DELAY);
+    delay(SHORT_PRESS_DELAY);
 
     releaseButton(btnA);
     delay(SMALL_DELAY);
@@ -138,7 +140,7 @@ void testCombinations() {
     delay(SMALL_DELAY);
     pushButton(btnB);
 
-    delay(3 * LONG_SIMULTANEOUS_PRESS_DELAY); // should not influence
+    delay(3.5 * SIMULTANEOUS_LONG_PRESS_TIME); // should not influence
 
     releaseButton(btnA);
     delay(SMALL_DELAY);
@@ -159,7 +161,7 @@ void testCombinations() {
 
     // TEST BUTTON C LONG PRESS
     pushButton(btnC);
-    delay(3 * LONG_PRESS_DELAY);
+    delay(3.5 * LONG_PRESS_TIME);
 
     releaseButton(btnC);
 
@@ -199,4 +201,5 @@ void testOnPressSimultaneousAll() {
 
     assertAllEqual0Except(simultaneousPressABCD);
 }
+#endif
 

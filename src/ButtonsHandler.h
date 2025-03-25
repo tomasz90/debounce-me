@@ -2,10 +2,8 @@
 #define BUTTON_HANDLER_H
 
 #include <Arduino.h>
+#include <ArxContainer.h>
 #include "Button.h"
-#include <vector>
-#include <map>
-#include <set>
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
 #define IS_FREE_RTOS_SUPPORTED 1
@@ -25,7 +23,6 @@ public:
 
 #if IS_FREE_RTOS_SUPPORTED
     void pollOnce(int pollInterval = 1);
-
     void pollStop();
 #endif
 
@@ -39,7 +36,7 @@ private:
     struct ButtonSimultaneousProperties {
         std::function<void()> behavior;
         std::function<void()> behaviorLong;
-        unsigned int longPressTime = -1;
+        int longPressTime = -1;
     };
 
     unsigned int debounceTime = 20;

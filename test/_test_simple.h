@@ -1,6 +1,8 @@
 #include "test_config.h"
 #include "test_utils.h"
 
+#ifndef ARDUINO_ARCH_AVR
+
 void testOnPress() {
     pushButton(btnA);
     delay(SHORT_PRESS_DELAY);
@@ -58,10 +60,11 @@ void testOnPressDouble2() {
 
 void testOnPressLongMultiple() {
     pushButton(btnA);
-    delay(3 * LONG_PRESS_DELAY);
+    delay(3.5 * LONG_PRESS_TIME);
 
     releaseButton(btnA);
 
     assertAllEqual0Except(longPressA, 3);
 }
+#endif
 
