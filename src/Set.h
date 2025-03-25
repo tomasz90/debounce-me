@@ -8,30 +8,60 @@ namespace arx {
 
         template<typename T, size_t N = ARX_VECTOR_DEFAULT_SIZE>
         struct set : public vector<T, N> {
+
             set() : vector<T, N>() {}
 
             set(std::initializer_list<T> lst) : vector<T, N>() {
-                for (const auto& item : lst) {
-                    insert(item); // avoid duplicates
-                }
+                for (const auto &item: lst) insert(item); // avoid duplicates
             }
 
-            // Updated insert() with duplicate checking
-            virtual void insert(const T& data) {
+            virtual void insert(const T &data) {
                 // Check for existing element
                 for (size_t i = 0; i < this->size(); ++i) {
                     if ((*this)[i] == data) {
                         return; // Element already exists
                     }
                 }
-
                 // Add new element if space available
-                if (this->size() < N) {
-                    this->push_back(data);
-                }
+                if (this->size() < N) this->push_back(data);
             }
 
-            friend bool operator==(const set& a, const set& b) {
+            bool exist(const T &data) {
+                for (size_t i = 0; i < this->size(); ++i) {
+                    if ((*this)[i] == data) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            bool erase(const T &data) {
+                // Find position using binary search
+                size_t low = 0;
+                size_t high = this->size();
+                while (low < high) {
+                    size_t mid = (low + high) / 2;
+                    if ((*this)[mid] < data) {
+                        low = mid + 1;
+                    } else {
+                        high = mid;
+                    }
+                }
+
+                // Check if element exists
+                if (low >= this->size() || (*this)[low] != data) {
+                    return false;
+                }
+
+                // Shift elements left
+                for (size_t i = low; i < this->size() - 1; ++i) {
+                    (*this)[i] = (*this)[i + 1];
+                }
+                this->pop_back();
+                return true;
+            }
+
+            friend bool operator==(const set &a, const set &b) {
                 if (a.size() != b.size()) return false;
                 for (size_t i = 0; i < a.size(); ++i) {
                     bool found = false;
@@ -46,59 +76,24 @@ namespace arx {
                 return true;
             }
 
-            friend bool operator<(const set& a, const set& b) {
-                // Create sorted temporary copies
-                T a_sorted[N], b_sorted[N];
-                size_t a_size = 0, b_size = 0;
+            friend bool operator<(const set &a, const set &b) {
+                if (a.size() != b.size()) return a.size() < b.size();
 
-                // Copy elements
-                for (const auto& item : a) a_sorted[a_size++] = item;
-                for (const auto& item : b) b_sorted[b_size++] = item;
-
-                // Bubble sort (no std::sort)
-                for (size_t i = 0; i < a_size; ++i) {
-                    for (size_t j = 0; j < a_size-1; ++j) {
-                        if (a_sorted[j] > a_sorted[j+1]) {
-                            T temp = a_sorted[j];
-                            a_sorted[j] = a_sorted[j+1];
-                            a_sorted[j+1] = temp;
-                        }
-                    }
+                // If sizes are equal, compare elements
+                for (size_t i = 0; i < a.size(); ++i) {
+                    if (a[i] < b[i]) return true;
+                    if (b[i] < a[i]) return false;
                 }
-
-                for (size_t i = 0; i < b_size; ++i) {
-                    for (size_t j = 0; j < b_size-1; ++j) {
-                        if (b_sorted[j] > b_sorted[j+1]) {
-                            T temp = b_sorted[j];
-                            b_sorted[j] = b_sorted[j+1];
-                            b_sorted[j+1] = temp;
-                        }
-                    }
-                }
-
-                // Lexicographical comparison
-                size_t min_size = a_size < b_size ? a_size : b_size;
-                for (size_t i = 0; i < min_size; ++i) {
-                    if (a_sorted[i] < b_sorted[i]) return true;
-                    if (b_sorted[i] < a_sorted[i]) return false;
-                }
-                return a_size < b_size;
-            }
-
-            bool isEmpty() const {
-                return empty();
+                return false; // Sets are equal
             }
 
         private:
-            using vector<T, N>::empty;
             using vector<T, N>::push_back;
             using vector<T, N>::pop_back;
-            using vector<T, N>::begin;
+            using vector<T, N>::front;
             using vector<T, N>::back;
             using vector<T, N>::emplace_back;
             using vector<T, N>::data;
-            using vector<T, N>::front;
-            using vector<T, N>::end;
             using vector<T, N>::erase;
             using vector<T, N>::shrink_to_fit;
             using vector<T, N>::resize;
