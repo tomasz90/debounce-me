@@ -1,9 +1,12 @@
 #include "ButtonsHandler.h"
 
+int ButtonsHandler::pollNumber = 0;
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
     std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
         buttonTemporary[button].buttonLastStartPressed = 0;
         buttonTemporary[button].buttonWasLongPressed = false;
+        btnStates[button] = {false, false, false, false, false, false, false};
+        lastBtnStates[button] = {false, false, false, false, false, false, false};
     });
 }
 
@@ -98,6 +101,10 @@ void ButtonsHandler::poll() {
 }
 
 void ButtonsHandler::processButtonState(Button *button) {
+    if(lastBtnStates[button] != btnStates[button]) {
+        btnStates[button].log();
+    }
+    lastBtnStates[button] = btnStates[button];
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
     bool isLongPress = isLongPressed(button);
     bool _wasPressed = wasPressed(button) && !wasSimultaneousPress && !isLongPress && !wasLongPressed(button);
@@ -106,6 +113,15 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isRegisteredPress = buttonTemporary[button].buttonLastClicked != 0;
     bool isElapsedTime = millis() - buttonTemporary[button].buttonLastClicked > button->doublePressTime;
 
+    btnStates[button] = {
+            isSimultaneousLongPress,
+            isLongPress,
+            _wasPressed,
+            _areMultipleButtonsPressed,
+            isDoublePressSupported,
+            isRegisteredPress,
+            isElapsedTime
+    };
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {

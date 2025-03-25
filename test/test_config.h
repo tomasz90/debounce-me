@@ -23,7 +23,7 @@
 
 #define DELAY_BETWEEN_TESTS 150
 
-#define DEBOUNCE_TIME 2
+#define DEBOUNCE_TIME 1
 
 extern Button *btnA;
 extern Button *btnB;
