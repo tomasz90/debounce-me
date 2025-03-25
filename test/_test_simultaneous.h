@@ -123,7 +123,7 @@ void testCombinations() {
     delay(SMALL_DELAY);
     pushButton(btnC);
 
-    delay(LONG_PRESS_DELAY);
+    delay(SHORT_PRESS_DELAY);
 
     releaseButton(btnA);
     delay(SMALL_DELAY);
@@ -159,7 +159,7 @@ void testCombinations() {
 
     // TEST BUTTON C LONG PRESS
     pushButton(btnC);
-    delay(3 * LONG_PRESS_DELAY);
+    delay(3.5 * LONG_PRESS_TIME);
 
     releaseButton(btnC);
 

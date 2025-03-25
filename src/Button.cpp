@@ -48,10 +48,17 @@ void Button::setClickDouble(std::function<void()> behavior, unsigned int _double
 }
 
 bool Button::operator<(const Button &other) const {
-    return false;
+    // Compare pins first, then other properties if pins are equal
+    if (pin != other.pin) {
+        return pin < other.pin;
+    }
+    if (pinSecond != other.pinSecond) {
+        return pinSecond < other.pinSecond;
+    }
+    return mode < other.mode;
 }
 
 bool Button::operator==(const Button &other) const {
-    return this->pin == other.pin;
+    return pin == other.pin && pinSecond == other.pinSecond;
 }
 

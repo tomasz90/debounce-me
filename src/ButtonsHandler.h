@@ -5,8 +5,8 @@
 #include "Button.h"
 #include <vector>
 #include <map>
-#include <set>
-//#include <Set.h>
+//#include <set>
+#include <Set.h>
 #include <algorithm>
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
@@ -51,6 +51,7 @@ private:
     };
 
     struct BtnState {
+        bool _isPressed;
         bool isSimultaneousLongPress;
         bool isLongPress;
         bool _wasPressed;
@@ -58,15 +59,18 @@ private:
         bool isDoublePressSupported;
         bool isRegisteredPress;
         bool isElapsedTime;
+        bool _wasReleased;
 
         bool operator==(const BtnState &other) const {
-            return isSimultaneousLongPress == other.isSimultaneousLongPress &&
+            return _isPressed == other._isPressed &&
+                   isSimultaneousLongPress == other.isSimultaneousLongPress &&
                    isLongPress == other.isLongPress &&
                    _wasPressed == other._wasPressed &&
                    _areMultipleButtonsPressed == other._areMultipleButtonsPressed &&
                    isDoublePressSupported == other.isDoublePressSupported &&
                    isRegisteredPress == other.isRegisteredPress &&
-                   isElapsedTime == other.isElapsedTime;
+                   isElapsedTime == other.isElapsedTime &&
+                   _wasReleased == other._wasReleased;
         }
 
         bool operator!=(const BtnState &other) const {
@@ -75,13 +79,15 @@ private:
 
         void log(int btnNumber) const {
             Serial.println("-------------------------------------------------------");
+            Serial.println(String(btnNumber) + "._isPressed:                 " + String(_isPressed));
             Serial.println(String(btnNumber) + ".isSimultaneousLongPress:    " + String(isSimultaneousLongPress));
-            Serial.println(String(btnNumber)   + ".isLongPress:                " + String(isLongPress));
-            Serial.println(String(btnNumber)   + "._wasPressed:                " + String(_wasPressed));
-            Serial.println(String(btnNumber)   + "._areMultipleButtonsPressed: " + String(_areMultipleButtonsPressed));
-            Serial.println(String(btnNumber)   + ".isDoublePressSupported:     " + String(isDoublePressSupported));
-            Serial.println(String(btnNumber)   + ".isRegisteredPress:          " + String(isRegisteredPress));
-            Serial.println(String(btnNumber)   + ".isElapsedTime:              " + String(isElapsedTime));
+            Serial.println(String(btnNumber) + ".isLongPress:                " + String(isLongPress));
+            Serial.println(String(btnNumber) + "._wasPressed:                " + String(_wasPressed));
+            Serial.println(String(btnNumber) + "._areMultipleButtonsPressed: " + String(_areMultipleButtonsPressed));
+            Serial.println(String(btnNumber) + ".isDoublePressSupported:     " + String(isDoublePressSupported));
+            Serial.println(String(btnNumber) + ".isRegisteredPress:          " + String(isRegisteredPress));
+            Serial.println(String(btnNumber) + ".isElapsedTime:              " + String(isElapsedTime));
+            Serial.println(String(btnNumber) + "._wasReleased:               " + String(_wasReleased));
         }
     };
 

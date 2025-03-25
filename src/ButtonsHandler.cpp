@@ -1,12 +1,10 @@
 #include "ButtonsHandler.h"
 
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
-    std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
+    for (auto &button: buttons) {
         buttonTemporary[button].buttonLastStartPressed = 0;
         buttonTemporary[button].buttonWasLongPressed = false;
-        btnStates[button] = {false, false, false, false, false, false, false};
-        lastBtnStates[button] = {false, false, false, false, false, false, false};
-    });
+    }
 }
 
 void ButtonsHandler::setDebounceTime(unsigned int time) {
@@ -108,18 +106,21 @@ void ButtonsHandler::processButtonState(Button *button) {
     bool isDoublePressSupported = button->onPressDouble != nullptr;
     bool isRegisteredPress = buttonTemporary[button].buttonLastClicked != 0;
     bool isElapsedTime = millis() - buttonTemporary[button].buttonLastClicked > button->doublePressTime;
+    bool _wasReleased = wasReleased(button);
 
     btnStates[button] = {
+            _isPressed,
             isSimultaneousLongPress,
             isLongPress,
             _wasPressed,
             _areMultipleButtonsPressed,
             isDoublePressSupported,
             isRegisteredPress,
-            isElapsedTime
+            isElapsedTime,
+            _wasReleased
     };
 
-    if(lastBtnStates[button] != btnStates[button]) {
+    if (lastBtnStates[button] != btnStates[button]) {
         btnStates[button].log(button->pinSecond);
         Serial.print("CURRENTLY PRESSED: ");
         Serial.println(currentlyPressed.size());
@@ -145,7 +146,7 @@ void ButtonsHandler::processButtonState(Button *button) {
     } else if (_wasPressed) {
         onSimultaneousPress(button);
         Serial.println("\nXXXXXXXXXXXXXXXX    SIMULTANEOUS PRESS    XXXXXXXXXXXXXXXX\n");
-    } else if (wasReleased(button)) {
+    } else if (_wasReleased) {
         onWasReleased(button);
         Serial.println("\nXXXXXXXXXXXXXXXX      ON WAS RELEASED     XXXXXXXXXXXXXXXX\n");
     }

@@ -58,7 +58,7 @@ void testOnPressDouble2() {
 
 void testOnPressLongMultiple() {
     pushButton(btnA);
-    delay(3 * LONG_PRESS_DELAY);
+    delay(3.5 * LONG_PRESS_TIME);
 
     releaseButton(btnA);
 

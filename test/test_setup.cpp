@@ -41,25 +41,25 @@ void setup() {
     btnHlr.setClickSimultaneousLong({btnA, btnB, btnC}, simultaneousLongPressABC, SIMULTANEOUS_PRESS_TIME);
 
     btnHlr.setDebounceTime(DEBOUNCE_TIME);
-    btnHlr.pollOnce();
+    btnHlr.pollOnce(3);
 
     UNITY_BEGIN();
 
     RUN_TEST(testOnPress);
-//    RUN_TEST(testOnPressLong);
-//    RUN_TEST(testOnPressDouble);
-//    RUN_TEST(testOnPressDouble2);
-//    RUN_TEST(testOnPressLongMultiple);
-//    RUN_TEST(testOnPressSimultaneous);
-//    RUN_TEST(testOnPressSimultaneous2);
-//    RUN_TEST(testOnPressSimultaneousNoneMatch);
-//    RUN_TEST(testOnPressSimultaneous3);
-//    RUN_TEST(testOnPressSimultaneousLong);
-//    RUN_TEST(testOnPressSimultaneous4);
-//    RUN_TEST(testNotOnPressSimultaneous5);
-//    RUN_TEST(testNotOnPressSimultaneous6);
-//    RUN_TEST(testCombinations);
-//    RUN_TEST(testOnPressSimultaneousAll);
+    RUN_TEST(testOnPressLong);
+    RUN_TEST(testOnPressDouble);
+    RUN_TEST(testOnPressDouble2);
+    RUN_TEST(testOnPressLongMultiple);
+    RUN_TEST(testOnPressSimultaneous);
+    RUN_TEST(testOnPressSimultaneous2);
+    RUN_TEST(testOnPressSimultaneousNoneMatch);
+    RUN_TEST(testOnPressSimultaneous3);
+    RUN_TEST(testOnPressSimultaneousLong);
+    RUN_TEST(testOnPressSimultaneous4);
+    RUN_TEST(testNotOnPressSimultaneous5);
+    RUN_TEST(testNotOnPressSimultaneous6);
+    RUN_TEST(testCombinations);
+    RUN_TEST(testOnPressSimultaneousAll);
 
     UNITY_END();
 
