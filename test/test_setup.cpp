@@ -1,10 +1,10 @@
 #include "_test_simple.h"
 #include "_test_simultaneous.h"
 
-Button *btnA = new Button(BUTTON_PIN_A, IN_PULLUP);
-Button *btnB = new Button(BUTTON_PIN_B, IN_PULLUP);
-Button *btnC = new Button(BUTTON_PIN_C, IN_PULLUP);
-Button *btnD = new Button(BUTTON_PIN_D, IN_PULLUP);
+Button *btnA = new Button(BUTTON_PIN_A, 1, IN_PULLUP);
+Button *btnB = new Button(BUTTON_PIN_B, 2, IN_PULLUP);
+Button *btnC = new Button(BUTTON_PIN_C, 3, IN_PULLUP);
+Button *btnD = new Button(BUTTON_PIN_D, 4, IN_PULLUP);
 
 ButtonsHandler btnHlr({btnA, btnB, btnC, btnD});
 
@@ -14,7 +14,7 @@ void setup() {
     btnA->setClick(pressA);
     btnB->setClick(pressB);
     btnC->setClick(pressC);
-    btnD->setClick([]{});
+    btnD->setClick([] {});
 
     btnA->setClickLong(longPressA, LONG_PRESS_TIME, true);
     btnB->setClickLong(longPressB, LONG_PRESS_TIME, true);

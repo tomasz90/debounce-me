@@ -5,8 +5,8 @@
 #include "Button.h"
 #include <vector>
 #include <map>
-//#include <set>
-#include <Set.h>
+#include <set>
+//#include <Set.h>
 #include <algorithm>
 
 #if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
@@ -17,21 +17,25 @@
 
 class ButtonsHandler {
 public:
-    ButtonsHandler(std::initializer_list<Button*> buttons);
+    ButtonsHandler(std::initializer_list<Button *> buttons);
 
-    void setClickSimultaneous(std::set<Button*> _buttons, std::function<void()> behavior);
-    void setClickSimultaneousLong(std::set<Button*> _buttons, std::function<void()> behavior, unsigned int longPressTime = 1000);
+    void setClickSimultaneous(std::set<Button *> _buttons, std::function<void()> behavior);
+
+    void setClickSimultaneousLong(std::set<Button *> _buttons, std::function<void()> behavior,
+                                  unsigned int longPressTime = 1000);
+
     void setDebounceTime(unsigned int time);
 
     void poll();
 
 #if IS_FREE_RTOS_SUPPORTED
+
     void pollOnce(int pollInterval = 1);
 
     void pollStop();
+
 #endif
 
-    static int pollNumber;
 
 private:
     struct ButtonTemporaryProperties {
@@ -56,71 +60,77 @@ private:
         bool isElapsedTime;
 
         bool operator==(const BtnState &other) const {
-            return isSimultaneousLongPress    == other.isSimultaneousLongPress &&
-                   isLongPress                == other.isLongPress &&
-                   _wasPressed                == other._wasPressed &&
+            return isSimultaneousLongPress == other.isSimultaneousLongPress &&
+                   isLongPress == other.isLongPress &&
+                   _wasPressed == other._wasPressed &&
                    _areMultipleButtonsPressed == other._areMultipleButtonsPressed &&
-                   isDoublePressSupported     == other.isDoublePressSupported &&
-                   isRegisteredPress          == other.isRegisteredPress &&
-                   isElapsedTime              == other.isElapsedTime;
+                   isDoublePressSupported == other.isDoublePressSupported &&
+                   isRegisteredPress == other.isRegisteredPress &&
+                   isElapsedTime == other.isElapsedTime;
         }
+
         bool operator!=(const BtnState &other) const {
             return !(*this == other);
         }
 
-        void log() const {
-            pollNumber++;
-            Serial.print(String(pollNumber) + ".isSimultaneousLongPress: ");
-            Serial.println(isSimultaneousLongPress);
-            Serial.print(String(pollNumber) + ".isLongPress: ");
-            Serial.println(isLongPress);
-            Serial.print(String(pollNumber) + "._wasPressed: ");
-            Serial.println(_wasPressed);
-            Serial.print(String(pollNumber) + "._areMultipleButtonsPressed: ");
-            Serial.println(_areMultipleButtonsPressed);
-            Serial.print(String(pollNumber) + ".isDoublePressSupported: ");
-            Serial.println(isDoublePressSupported);
-            Serial.print(String(pollNumber) + ".isRegisteredPress: ");
-            Serial.println(isRegisteredPress);
-            Serial.print(String(pollNumber) + ".isElapsedTime: ");
-            Serial.println(isElapsedTime);
+        void log(int btnNumber) const {
+            Serial.println("-------------------------------------------------------");
+            Serial.println(String(btnNumber) + ".isSimultaneousLongPress:    " + String(isSimultaneousLongPress));
+            Serial.println(String(btnNumber)   + ".isLongPress:                " + String(isLongPress));
+            Serial.println(String(btnNumber)   + "._wasPressed:                " + String(_wasPressed));
+            Serial.println(String(btnNumber)   + "._areMultipleButtonsPressed: " + String(_areMultipleButtonsPressed));
+            Serial.println(String(btnNumber)   + ".isDoublePressSupported:     " + String(isDoublePressSupported));
+            Serial.println(String(btnNumber)   + ".isRegisteredPress:          " + String(isRegisteredPress));
+            Serial.println(String(btnNumber)   + ".isElapsedTime:              " + String(isElapsedTime));
         }
     };
 
     unsigned int debounceTime = 20;
     bool wasSimultaneousPress = false;
 
-    std::map<Button*, BtnState> btnStates;
-    std::map<Button*, BtnState> lastBtnStates;
-    std::vector<Button*> buttons;
-    std::map<Button*, ButtonTemporaryProperties> buttonTemporary;
-    std::map<std::set<Button*>, ButtonSimultaneousProperties> simultaneousBehaviors;
-    std::set<Button*> currentlyPressed;
+    std::map<Button *, BtnState> btnStates;
+    std::map<Button *, BtnState> lastBtnStates;
+    std::vector<Button *> buttons;
+    std::map<Button *, ButtonTemporaryProperties> buttonTemporary;
+    std::map<std::set<Button *>, ButtonSimultaneousProperties> simultaneousBehaviors;
+    std::set<Button *> currentlyPressed;
 
 #if IS_FREE_RTOS_SUPPORTED
     TimerHandle_t timer;
 #endif
 
     void pollState(Button *button) const;
+
     void resetState(Button *button) const;
 
     bool isPressed(Button *button) const;
+
     bool wasPressed(Button *button) const;
+
     bool wasReleased(Button *button) const;
 
     bool isLongPressed(Button *button);
+
     bool isSimultaneousLongPressed(Button *button);
-    bool& wasLongPressed(Button *button);
+
+    bool &wasLongPressed(Button *button);
+
     bool areMultipleButtonsPressed() const;
 
     void processButtonState(Button *button);
 
     void onSimultaneousPressLong();
+
     void onPressLong(Button *button);
+
     void onSimultaneousPress(Button *button);
+
     void onPress(Button *button);
+
     void onDoublePress(Button *button);
+
     void registerPress(Button *button);
+
     void onWasReleased(Button *button);
 };
 

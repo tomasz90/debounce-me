@@ -1,6 +1,5 @@
 #include "ButtonsHandler.h"
 
-int ButtonsHandler::pollNumber = 0;
 ButtonsHandler::ButtonsHandler(std::initializer_list<Button *> buttons) : buttons(buttons) {
     std::for_each(this->buttons.begin(), this->buttons.end(), [this](Button *button) {
         buttonTemporary[button].buttonLastStartPressed = 0;
@@ -102,7 +101,7 @@ void ButtonsHandler::poll() {
 
 void ButtonsHandler::processButtonState(Button *button) {
     if(lastBtnStates[button] != btnStates[button]) {
-        btnStates[button].log();
+        btnStates[button].log(button->pinSecond);
     }
     lastBtnStates[button] = btnStates[button];
     bool isSimultaneousLongPress = isSimultaneousLongPressed(button);
@@ -124,17 +123,22 @@ void ButtonsHandler::processButtonState(Button *button) {
     };
     if (isPressed(button) && !wasSimultaneousPress && isSimultaneousLongPress) {
         onSimultaneousPressLong();
+        Serial.println("\nXXXXXXXXXXXXXXXX SIMULTANEOUS LONG PRESS XXXXXXXXXXXXXXXX\n");
     } else if (isPressed(button) && !wasSimultaneousPress && isLongPress) {
         onPressLong(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX        LONG PRESS       XXXXXXXXXXXXXXXX\n");
     } else if ((_wasPressed && !_areMultipleButtonsPressed && !isDoublePressSupported) ||
                (isRegisteredPress && isElapsedTime)) {
         onPress(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX           PRESS         XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed && !_areMultipleButtonsPressed && isDoublePressSupported && isRegisteredPress && !isElapsedTime) {
         onDoublePress(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX       DOUBLE PRESS      XXXXXXXXXXXXXXXX\n");
     } else if (_wasPressed && !_areMultipleButtonsPressed && !isRegisteredPress) {
         registerPress(button);
     } else if (_wasPressed) {
         onSimultaneousPress(button);
+        Serial.println("\nXXXXXXXXXXXXXXXX    SIMULTANEOUS PRESS    XXXXXXXXXXXXXXXX\n");
     } else if (wasReleased(button)) {
         onWasReleased(button);
     }

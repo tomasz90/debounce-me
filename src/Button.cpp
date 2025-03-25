@@ -22,9 +22,9 @@ void Button::initialize() {
     initialized = true;
     pinMode(pin, mode);
     if (pinSecond == -1) return;
-    auto pinSecondState = mode == IN_PULLUP ? LOW : HIGH;
-    pinMode(pinSecond, OUTPUT);
-    digitalWrite(pinSecond, pinSecondState);
+//    auto pinSecondState = mode == IN_PULLUP ? LOW : HIGH;
+//    pinMode(pinSecond, OUTPUT);
+//    digitalWrite(pinSecond, pinSecondState);
 }
 
 void Button::setClick(std::function<void()> behavior) {
