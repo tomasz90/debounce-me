@@ -10,7 +10,11 @@ namespace arx {
         struct set : public vector<T, N> {
             set() : vector<T, N>() {}
 
-            set(std::initializer_list<T> lst) : vector<T, N>(lst) {}
+            set(std::initializer_list<T> lst) : vector<T, N>() {
+                for (const auto& item : lst) {
+                    insert(item); // avoid duplicates
+                }
+            }
 
             // Updated insert() with duplicate checking
             virtual void insert(const T& data) {
@@ -80,6 +84,26 @@ namespace arx {
                 }
                 return a_size < b_size;
             }
+
+            bool isEmpty() const {
+                return empty();
+            }
+
+        private:
+            using vector<T, N>::empty;
+            using vector<T, N>::push_back;
+            using vector<T, N>::pop_back;
+            using vector<T, N>::begin;
+            using vector<T, N>::back;
+            using vector<T, N>::emplace_back;
+            using vector<T, N>::data;
+            using vector<T, N>::front;
+            using vector<T, N>::end;
+            using vector<T, N>::erase;
+            using vector<T, N>::shrink_to_fit;
+            using vector<T, N>::resize;
+            using vector<T, N>::reserve;
+            using vector<T, N>::capacity;
         };
     } // namespace arx
 } // namespace stdx
