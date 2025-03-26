@@ -16,45 +16,26 @@ namespace arx {
             }
 
             virtual void insert(const T &data) {
-                // Check for existing element
-                for (size_t i = 0; i < this->size(); ++i) {
-                    if ((*this)[i] == data) {
-                        return; // Element already exists
-                    }
+                if (this->size() >= N) return;
+                if (exist(data)) return;
+                size_t low = binary(data);
+                // Insert and shift elements
+                this->push_back(data);
+                for (size_t i = this->size()-1; i > low; --i) {
+                    (*this)[i] = (*this)[i-1];
                 }
-                // Add new element if space available
-                if (this->size() < N) this->push_back(data);
+                (*this)[low] = data;
             }
 
             bool exist(const T &data) {
-                for (size_t i = 0; i < this->size(); ++i) {
-                    if ((*this)[i] == data) {
-                        return true;
-                    }
-                }
-                return false;
+                return index(data) != -1;
             }
 
             bool erase(const T &data) {
-                // Find position using binary search
-                size_t low = 0;
-                size_t high = this->size();
-                while (low < high) {
-                    size_t mid = (low + high) / 2;
-                    if ((*this)[mid] < data) {
-                        low = mid + 1;
-                    } else {
-                        high = mid;
-                    }
-                }
-
-                // Check if element exists
-                if (low >= this->size() || (*this)[low] != data) {
-                    return false;
-                }
-
+                int idx = index(data);
+                if (idx == -1) return false;
                 // Shift elements left
-                for (size_t i = low; i < this->size() - 1; ++i) {
+                for (size_t i = idx; i < this->size() - 1; ++i) {
                     (*this)[i] = (*this)[i + 1];
                 }
                 this->pop_back();
@@ -99,6 +80,26 @@ namespace arx {
             using vector<T, N>::resize;
             using vector<T, N>::reserve;
             using vector<T, N>::capacity;
+
+            int index(const T &data) {
+                size_t low = binary(data);
+                return (low < this->size() && (*this)[low] == data) ? low : -1;
+            }
+
+            int binary(const T &data) {
+                // Find position using binary search
+                size_t low = 0;
+                size_t high = this->size();
+                while (low < high) {
+                    size_t mid = (low + high) / 2;
+                    if ((*this)[mid] < data) {
+                        low = mid + 1;
+                    } else {
+                        high = mid;
+                    }
+                }
+                return low;
+            }
         };
     } // namespace arx
 } // namespace stdx
