@@ -13,7 +13,7 @@ Button *buttonB = new Button(BUTTON_PIN_B, IN_PULLUP);
 
 ButtonsHandler buttonsHandler({buttonA, buttonB});
 
-#ifndef UNITY_INCLUDE_CONFIG_H
+#ifndef PIO_UNIT_TESTING
 
 void setup() {
     Serial.begin(BAUD_RATE);
