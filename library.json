@@ -1,6 +1,6 @@
 {
   "name": "DebounceMe",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "This library solves bounce problem, imperfection of physical buttons. It supports short clicks, long clicks, double clicks and combination of clicks!",
   "keywords": "button, buttons, switch, switches, click, clicks, debounce, debouncer, input, IO",
   "repository": {
@@ -12,6 +12,13 @@
       "name": "Tomasz Kulig",
       "email": "tomaszkacperkulig@gmail.com",
       "url": "https://github.com/tomasz90"
+    }
+  ],
+  "dependencies": [
+    {
+      "owner": "tomasz90",
+      "name": "ArxContainer",
+      "version": "https://github.com/tomasz90/ArxContainer.git"
     }
   ],
   "license": "MIT",
