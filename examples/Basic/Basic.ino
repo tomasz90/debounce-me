@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <Button.h>
 #include <ButtonsHandler.h>
+#ifdef NRF52840_XXAA
+#include <Adafruit_TinyUSB.h>
+#endif
 
 #define BUTTON_PIN_A 12
 #define BUTTON_PIN_B 13
@@ -13,7 +16,7 @@ Button *buttonB = new Button(BUTTON_PIN_B, IN_PULLUP);
 
 ButtonsHandler buttonsHandler({buttonA, buttonB});
 
-#ifndef UNITY_INCLUDE_CONFIG_H
+#ifndef PIO_UNIT_TESTING
 
 void setup() {
     Serial.begin(BAUD_RATE);

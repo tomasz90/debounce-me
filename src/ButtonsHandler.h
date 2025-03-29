@@ -5,7 +5,7 @@
 #include <ArxContainer.h>
 #include "Button.h"
 
-#if defined(ESP32) || defined(NRF52840_XXAA) || defined(USE_POLL_ONCE)
+#if defined(INC_FREERTOS_H) || defined(USE_POLL_ONCE)
 #define IS_FREE_RTOS_SUPPORTED 1
 #else
 #define IS_FREE_RTOS_SUPPORTED 0
@@ -24,6 +24,8 @@ public:
 #if IS_FREE_RTOS_SUPPORTED
     void pollOnce(int pollInterval = 1);
     void pollStop();
+private:
+    TimerHandle_t timer;
 #endif
 
 private:
@@ -46,10 +48,6 @@ private:
     std::map<Button*, ButtonTemporaryProperties> buttonTemporary;
     std::map<std::set<Button*>, ButtonSimultaneousProperties> simultaneousBehaviors;
     std::set<Button*> currentlyPressed;
-
-#if IS_FREE_RTOS_SUPPORTED
-    TimerHandle_t timer;
-#endif
 
     void pollState(Button *button) const;
     void resetState(Button *button) const;

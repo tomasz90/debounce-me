@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <Button.h>
 #include <ButtonsHandler.h>
+#ifdef NRF52840_XXAA
+#include <Adafruit_TinyUSB.h>
+#endif
 
 #define BUTTON_PIN_A 12
 #define BUTTON_PIN_B 13
